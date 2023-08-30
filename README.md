@@ -16,7 +16,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Copy and edit the env file to set DIMO_FOLDER to the local path used in DIMO file server.
+Copy and edit the env file to set MOUNT_FOLDER to the local path that will be available to the web service's `/file` endpoint.
 
 ```
 cp .env.example .env
@@ -33,6 +33,8 @@ Then open http://127.0.0.1:5000
 or use curl
 
 ```
+curl http://127.0.0.1:5000/file/<name of file in MOUNT_FOLDER>
+
 curl -F fileInput=@/path/to/file.pdf http://127.0.0.1:5000/json
 
 curl -d fileUrl=https://www.link.to/report.pdf http://127.0.0.1:5000/json

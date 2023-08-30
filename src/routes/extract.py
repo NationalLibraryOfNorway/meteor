@@ -82,16 +82,16 @@ async def post_pdf_json(
     return JSONResponse(results)
 
 
-@router.get("/dimofile/{file_uuid}", response_class=JSONResponse, status_code=200)
-async def get_metadata_from_dimofile(
-        file_uuid: str,
+@router.get("/file/{file_name}", response_class=JSONResponse, status_code=200)
+async def get_metadata_from_file_on_disk(
+        file_name: str,
         conf: Annotated[Settings, Depends(get_settings)]
 ) -> JSONResponse:
     """
-    Extract metadata from a DIMO file and return it as JSON
+    Extract metadata from a file on disk and return it as JSON
     """
     try:
-        results = utils.meteor.run(conf.DIMO_FOLDER + '/' + file_uuid)
+        results = utils.meteor.run(conf.MOUNT_FOLDER + '/' + file_name)
     except Exception:
-        return JSONResponse({"error": "Error while processing file"})
+        return JSONResponse({"error": f"Error while processing {file_name}"})
     return JSONResponse(results)
