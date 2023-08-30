@@ -9,8 +9,8 @@ Requires Python 3.11
 First time:
 
 ```
-git clone git@git.nb.no:tekst/metadata_extraction.git
-cd metadata_extraction
+git clone git@github.com:NationalLibraryOfNorway/meteor.git
+cd meteor
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
