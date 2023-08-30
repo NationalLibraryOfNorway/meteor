@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>METEOR</title>
+    <link rel="stylesheet" href='{{ root_path }}/static/css/style.css' }}>
+  </head>
+  <body>
+    <h1><abbr title="METadataEkstrahering fra Offentlige Rapporter">METEOR</abbr></h1>
+
+    <div id="input">
+      <form method="POST" id="fileForm" action="" enctype="multipart/form-data" aria-label="Upload file">
+        <input type="file" name="fileInput" id="fileInput" accept=".pdf"><br>
+        <br>
+        <label for="fileUrl">or copy URL to a report:</label>
+        <input type="text" name="fileUrl" id="fileUrl">
+        <input type="submit" value="Submit" aria-label="Submit">
+      </form>
+      <p>or drop a PDF file</p>
+    </div>
+
+    {% if filepath %}
+    <embed src={{filepath}} width="100%" height="600">
+    {% endif %}
+
+    {% if filename %}
+    <p>Filename: {{ filename }}</p>
+    {% endif %}
+
+    {% if results %}
+    {% if results.error %}
+    <p id="error">{{results.error}}</p>
+    {% else %}
+    <div id="table">
+      <table id="data" class="table table-striped">
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Value</th>
+            <th>Origin</th>
+            <th>Registry</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for field in results %}
+
+          {% if field == 'publisher' %}
+          <tr>
+            <td>{{ field }}</td>
+            <td>{{ results[field].valueInDoc }}</td>
+            <td>{{ results[field].origin }}</td>
+            <td>{% if results[field].authId %}
+              <a href="https://bibsys-almaprimo.hosted.exlibrisgroup.com/permalink/f/nelpa2/AUTREG{{results[field].authId}}"
+                target='_blank'>{{results[field].value}}</a><br/>
+            </td>
+          </tr>
+          {% endif %}
+
+          {% elif field == 'authors' %}
+          {% for author in results['authors'] %}
+          <tr>
+            <td>author</td>
+            <td>Firstname: {{ author.firstname }}<br/>Lastname: {{ author.lastname }}</td>
+            <td>{{ author.origin }}</td>
+            <td></td>
+          </tr>
+          {% endfor %}
+
+          {% else %}
+          <tr>
+            <td>{{ field }}</td>
+            <td>{{ results[field].value }}</td>
+            <td>{{ results[field].origin }}</td>
+            <td></td>
+          </tr>
+
+          {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+    {% endif %}
+
+    <p><a href="{{ root_path }}/doc">API-dokumentasjon</a></p>
+    <p><a href="{{ root_path }}/swagger-ui">Swagger API-dokumentasjon</a></p>
+
+  </body>
+  <script src='{{ root_path }}/static/js/dragAndDrop.js'></script>
+</html>

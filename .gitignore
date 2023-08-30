@@ -1,0 +1,13 @@
+*~
+__pycache__
+/venv/
+/static/*.pdf
+/diff/*.json
+.env
+.coverage
+build
+dist
+*.egg-info/
+
+# IDE Intellij
+/.idea

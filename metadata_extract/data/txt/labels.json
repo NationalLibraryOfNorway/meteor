@@ -1,0 +1,26 @@
+{
+  "en": {
+    "author": ["authors", "author(s)", "author"],
+    "photo": ["photographer", "photo", "illustration"],
+    "publisher": ["published by", "publisher"],
+    "reportType": ["annual report", "evaluation", "guidance", "survey"],
+    "bindingWords": ["and"],
+    "report": ["report"]
+  },
+  "no": {
+    "author": ["forfatter(e)", "forfattere", "forfatter", "skrevet av"],
+    "photo": ["fotograf", "foto", "illustrasjon", "bilde", "fotomontasje"],
+    "publisher": ["utgiver", "utgivere", "utgitt av"],
+    "reportType": ["årsrapport", "evaluering", "veileder", "undersøkelse"],
+    "bindingWords": ["og"],
+    "report": ["rapport"]
+  },
+  "nn": {
+    "author": ["forfattar(ar)", "forfattarar", "forfattar"],
+    "photo": [],
+    "publisher": ["utgjevar", "utgjevarar"],
+    "reportType": [],
+    "bindingWords": [],
+    "report": []
+  }
+}

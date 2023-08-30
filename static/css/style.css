@@ -1,0 +1,29 @@
+body {
+    margin: 20px auto;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    max-width: 1200px;
+}
+
+div {
+    padding-top: 15px;
+}
+
+#input {
+    padding-left: 50px;
+    margin-bottom: 10px;
+    border-style: solid;
+    width: 50%;
+}
+
+#error {
+    color: red;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}

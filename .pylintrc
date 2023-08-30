@@ -1,0 +1,2 @@
+[MESSAGES CONTROL]
+disable=missing-function-docstring,fixme,too-few-public-methods

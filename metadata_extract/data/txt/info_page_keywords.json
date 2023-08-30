@@ -1,0 +1,17 @@
+{
+  "en": [
+    "year", "date", "publish", "isbn", "issn", "project no.", "title", "author", "number of pages", "summary",
+    "abstract", "©", "subject words", "keywords", "country", "county", "report", "employer", "availability",
+    "contact person", "publication type"
+  ],
+  "no": [
+    "år", "dato", "utgivelsesår", "utgiver", "utgitt", "isbn", "issn", "prosjektnummer", "prosjektnr.", "tittel",
+    "forfatter", "antallsider", "antall sider", "sidetall", "sammendrag", "©", "opphavsrett",
+    "rettighetshaver", "emneord", "nøkkelord", "stikkord", "land", "fylke", "rapport", "godkjennere", "redaktører",
+    "oppdragsgiver", "tilgjengelighet", "kontaktperson", "oppdrag", "referanse", "publikasjonstype", "publiseringstype",
+    "sitering", "signatur"
+  ],
+  "nn": [
+    "forfattar"
+  ]
+}

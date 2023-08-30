@@ -1,0 +1,21 @@
+{
+  "no": [
+    "akademi", "universitet", "direktorat", "direktoratet", "forsvar", "militær", "forsker", "seniorforsker",
+    "forskningsleder", "forskningssjef", "professor", "høgskole", "høyskole", "konsulent", "kommunal", "kommune",
+    "kongelig", "kongelige", "politikk", "politiker", "politi", "politiet", "myndighet", "myndigheter", "overvåking",
+    "overvåkning", "forskning", "forsvaret", "europa", "amerika", "fylke", "kontor", "seniorrådgiver", "rådgiver",
+    "rådgivere", "seniorrådgivere", "prosjekt", "prosjektleder", "direktør", "laboratorium", "stortinget", "system",
+    "vitenskap", "seksjon", "skole", "fakultet", "norge", "norsk", "seniorforsker", "skandinavia", "strategisk",
+    "lærer", "byrå", "assistent", "assisterende", "organisasjon", "senter", "departement", "avdeling", "fylkesmann",
+    "institutt", "internasjonal", "verden", "program", "rapport", "vitenskap"
+  ],
+  "en": [
+    "academy", "university", "director", "directorate", "defence", "military", "researcher", "senior researcher",
+    "research leader", "research manager", "professor", "college", "consultant", "consulting", "municipal", "municipality",
+    "royal", "politics", "politician", "police", "authority", "authorities", "surveillance", "research", "europe",
+    "america", "county", "office", "senior advisor", "advisor", "senior advisors", "project", "project manager",
+    "laboratory", "parliament", "system", "science", "section", "school", "faculty", "norway", "norwegian",
+    "scandinavia", "strategic", "teacher", "agency", "assistant", "organization", "center", "department", "division",
+    "governor", "institute", "international", "world", "policy", "program", "report", "science", "ministry", "ministries"
+  ]
+}

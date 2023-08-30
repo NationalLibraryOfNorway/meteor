@@ -1,0 +1,15 @@
+.git
+.gitlab-ci.yml
+.dockerignore
+.env.example
+mypy.ini
+Dockerfile
+**/*~
+data/
+registry/
+__pycache__
+metadata_extract/__pycache__
+k8s/
+run_on_file.py
+run_evaluation.py
+test/
