@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     UPLOAD_FOLDER: str = 'static'
 
     # Should be defined in a .env file
-    DIMO_FOLDER: str = ""
+    MOUNT_FOLDER: str = ""
     MAX_FILE_SIZE_MB: int = 0
     ENVIRONMENT: str = "local"
     REGISTRY_FILE: str = ""
