@@ -22,7 +22,7 @@ from metadata_extract.meteor import Meteor  # noqa: E402
 def create_previous_version_json() -> None:
     meteor = Meteor()
     response_data = []
-    pdf_folder_path = config('EVAL_FILES_FOLDER')
+    pdf_folder_path = config('DIFF_FILES_FOLDER')
     pdf_files = os.listdir(pdf_folder_path)
 
     for file in pdf_files:
