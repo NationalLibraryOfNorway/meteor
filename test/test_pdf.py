@@ -20,7 +20,7 @@ def test_year():
 
 def test_language():
     assert results['language'] == {
-        "value": "nb",
+        "value": "no",
         "origin": {
             "type": "LANGUAGE_MODEL"
         }

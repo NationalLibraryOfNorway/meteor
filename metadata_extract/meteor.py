@@ -1,9 +1,7 @@
 """Main module for Meteor"""
 
 
-from importlib.resources import files
 from typing import Optional
-from language.pytextcat import Classifier
 from .registry import PublisherRegistry
 from .meteor_document import MeteorDocument
 from .metadata import Results
@@ -19,16 +17,15 @@ class Meteor:
     and return the best ones as a Results object (TypedDict, JSON-serializable)
     """
 
-    def __init__(self, lm_dir: str = str(files('language.data').joinpath('lm'))):
+    def __init__(self) -> None:
         self.registry: Optional[PublisherRegistry] = None
-        self.classifier = Classifier(folder=lm_dir)
 
     def set_registry(self, registry: PublisherRegistry) -> None:
         self.registry = registry
 
     def run(self, file_path: str) -> Results:
         with MeteorDocument(file_path) as doc:
-            finder = Finder(doc, self.registry, self.classifier)
+            finder = Finder(doc, self.registry)
             finder.extract_metadata()
             finder.metadata.choose_best()
             return finder.metadata.results
