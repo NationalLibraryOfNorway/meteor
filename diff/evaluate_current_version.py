@@ -53,7 +53,7 @@ with open('diff/previous_results.json', 'r', encoding="UTF-8") as old_res_file:
 
 
 def fetch_files() -> None:
-    pdf_folder_path = config('EVAL_FILES_FOLDER')
+    pdf_folder_path = config('DIFF_FILES_FOLDER')
     pdf_files = os.listdir(pdf_folder_path)
 
     for file in pdf_files:

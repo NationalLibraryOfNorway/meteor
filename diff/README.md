@@ -1,6 +1,7 @@
 ## Diff script ##
 This is a simple script to compare selected fields from one version of Meteor against the current
-version. The script will output the results of the diff to the console.
+version. The script will output the results of the diff to the console. Make sure to set the value of the
+`DIFF_FILES_FOLDER` variable in the *.env* file to a valid path.
 
 ### Getting the `previous_results.json` file
 The `previous_results.json` file is the file that contains the results of the previous diff.
