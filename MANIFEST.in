@@ -1,3 +1,1 @@
 include metadata_extract/data/txt/*.json
-include language/data/lm/*.lm
-include language/data/lm/*.wm

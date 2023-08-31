@@ -7,7 +7,7 @@ import traceback
 from typing import TypedDict, NotRequired, Optional
 from dateutil.parser import parse
 from dateparser.search import search_dates
-from language.pytextcat import Classifier
+import langdetect
 from . import text, author_name
 from .candidate import Candidate, Origin
 from .infopage import InfoPage
@@ -30,11 +30,9 @@ class Finder:
     """
 
     def __init__(self, doc: MeteorDocument,
-                 registry: Optional[PublisherRegistry],
-                 classifier: Classifier):
+                 registry: Optional[PublisherRegistry]):
         self.doc = doc
         self.registry = registry
-        self.classifier = classifier
         self.metadata = Metadata()
 
     def search_in_registry(self, name: str) -> list[RegistryType]:
@@ -220,7 +218,7 @@ class Finder:
 
     def get_language(self) -> None:
         """Detects language of concatenated text, and adds it as a candidate."""
-        lang = self.classifier.classify(' '.join(self.doc.pages.values()))
+        lang = langdetect.detect(' '.join(self.doc.pages.values()))
         self.metadata.add_candidate('language', Candidate(lang, Origin.LANGUAGE_MODEL))
 
     def read_info_page(self) -> None:
