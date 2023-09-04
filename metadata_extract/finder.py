@@ -8,6 +8,7 @@ from typing import TypedDict, NotRequired, Optional
 from dateutil.parser import parse
 from dateparser.search import search_dates
 import langdetect
+from langdetect.lang_detect_exception import LangDetectException
 from . import text, author_name
 from .candidate import Candidate, Origin
 from .infopage import InfoPage
@@ -218,8 +219,11 @@ class Finder:
 
     def get_language(self) -> None:
         """Detects language of concatenated text, and adds it as a candidate."""
-        lang = langdetect.detect(' '.join(self.doc.pages.values()))
-        self.metadata.add_candidate('language', Candidate(lang, Origin.LANGUAGE_MODEL))
+        try:
+            lang = langdetect.detect(' '.join(self.doc.pages.values()))
+            self.metadata.add_candidate('language', Candidate(lang, Origin.LANGUAGE_MODEL))
+        except LangDetectException:
+            return
 
     def read_info_page(self) -> None:
         """Finds the infopage and searches for candidate values for title, publisher and authors."""
