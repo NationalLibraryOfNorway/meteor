@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     REGISTRY_USER: str = ""
     REGISTRY_DATABASE: str = ""
     REGISTRY_PASSWORD: str = ""
+    USE_GIELLADETECT: bool = False
 
     class Config:
         """Specify name of settings file"""

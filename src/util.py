@@ -39,6 +39,9 @@ class Utils:
                     }
                 )
             )
+        if get_settings().USE_GIELLADETECT:
+            import gielladetect  # pylint: disable=import-outside-toplevel
+            self.meteor.set_language_detection_method(gielladetect.detect)
 
     @staticmethod
     def get_languages() -> Optional[list[str]]:

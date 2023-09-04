@@ -80,3 +80,14 @@ Publisher names can be looked for in the [Norwegian Authority File](https://bibs
 To build a database from the registry's API, define the environment variables as described in `.env.example` then run `script.sh` in the `registry` directory.
 
 The resulting database will contain all entries of type corporations (MARC field 110 is present) and of quality level kat2 and kat3 (in MARC field 901).
+
+# License
+
+The code in this repository is licensed under Apache License 2.0. Please note that the
+[gielladetect](https://github.com/NationalLibraryOfNorway/gielladetect) library is
+licended under [GPLv3](https://www.gnu.org/licenses/gpl-3.0.txt), while Meteor is
+licensed under the Apache License 2.0. The licenses are compatible, but
+depending on legal interpretation, the terms of the GPLv3 (for example the
+requirement to publish corresponding source code when publishing an executable
+application) may be considered to apply to the whole of Meteor+gielladetect if you
+decide to install the optional gielladetect dependency.
