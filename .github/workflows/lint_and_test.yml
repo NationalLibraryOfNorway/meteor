@@ -23,4 +23,4 @@ jobs:
       - name: Type-check
         run: mypy metadata_extract src diff main.py
       - name: Running tests
-        run: python -m pytest --cov=metadata_extract
+        run: python -m pytest -c test/pytest.ini --cov=metadata_extract
