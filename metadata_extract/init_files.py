@@ -1,8 +1,9 @@
 # pylint: disable=missing-module-docstring
 import json
-
 from importlib.resources import files
 from typing import Type, Any
+
+from src.settings import get_settings
 
 
 class InitFiles:
@@ -29,6 +30,7 @@ class InitFiles:
     def __init__(self) -> None:
         if InitFiles._initialized:
             return
+        self.languages = get_settings().LANGUAGES.split(',')
         self.info_page_keywords = self.__init_info_page_keywords()
         self.stopwords = self.__init_stopwords()
         self.labels = self.__init_labels()
@@ -55,30 +57,30 @@ class InitFiles:
         keywords = []
         with files("metadata_extract.data").joinpath("txt/info_page_keywords.json").open() as file:
             languages = json.load(file)
-            for lang in languages:
-                keywords.extend(languages[lang])
+            [keywords.extend(languages[lang]) for lang in self.languages if lang in languages]
         return keywords
 
     def __init_stopwords(self) -> list[str]:
         stopwords = []
         with files("metadata_extract.data").joinpath("txt/stopwords.json").open() as file:
             languages = json.load(file)
-            for lang in languages:
-                stopwords.extend(languages[lang])
+            [stopwords.extend(languages[lang]) for lang in self.languages if lang in languages]
         return stopwords
 
     def __init_labels(self) -> dict[str, str]:
         labels = {}
         with files("metadata_extract.data").joinpath("txt/labels.json").open() as file:
             languages = json.load(file)
-            for lang in languages:
-                for key in languages[lang]:
-                    if key not in labels:
-                        labels[key] = ""
-                    labels[key] += "|" + "|".join(languages[lang][key])
+            [self.__get_labels_from_lang(labels, lang, languages) for lang in self.languages if lang in languages]
         for key in labels:
             labels[key] = labels[key].lstrip("|").rstrip("|")
         return labels
+
+    def __get_labels_from_lang(self, labels: dict, lang, languages) -> None:
+        for key in languages[lang]:
+            if key not in labels:
+                labels[key] = ""
+            labels[key] += "|" + "|".join(languages[lang][key])
 
     def __init_doc_type_mapping(self) -> dict[str, str]:
         doc_type_mapping = {}

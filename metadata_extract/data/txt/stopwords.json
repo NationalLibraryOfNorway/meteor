@@ -1,5 +1,5 @@
 {
-  "no": [
+  "nob": [
     "akademi", "universitet", "direktorat", "direktoratet", "forsvar", "militær", "forsker", "seniorforsker",
     "forskningsleder", "forskningssjef", "professor", "høgskole", "høyskole", "konsulent", "kommunal", "kommune",
     "kongelig", "kongelige", "politikk", "politiker", "politi", "politiet", "myndighet", "myndigheter", "overvåking",
@@ -9,7 +9,17 @@
     "lærer", "byrå", "assistent", "assisterende", "organisasjon", "senter", "departement", "avdeling", "fylkesmann",
     "institutt", "internasjonal", "verden", "program", "rapport", "vitenskap"
   ],
-  "en": [
+  "nno": [
+    "akademi", "universitet", "direktorat", "direktoratet", "forsvar", "militær", "forskar", "seniorforskar",
+    "forskingsleiar", "forskingssjef", "professor", "høgskule", "konsulent", "kommunal", "kommune",
+    "kongeleg", "kongelege", "politikk", "politikar", "politi", "politiet", "styresmakt", "styresmakter", "overvaking",
+    "forsking", "forsvaret", "europa", "amerika", "fylke", "kontor", "seniorrådgivar", "rådgivar",
+    "rådgivarar", "seniorrådgivarar", "prosjekt", "prosjektleiar", "direktør", "laboratorium", "stortinget", "system",
+    "vitskap", "seksjon", "skule", "fakultet", "norge", "norsk", "seniorforskar", "skandinavia", "strategisk",
+    "lærer", "byrå", "assistent", "assisterande", "organisasjon", "senter", "departement", "avdeling", "fylkesmann",
+    "institutt", "internasjonal", "verda", "program", "rapport", "vitskap"
+  ],
+  "eng": [
     "academy", "university", "director", "directorate", "defence", "military", "researcher", "senior researcher",
     "research leader", "research manager", "professor", "college", "consultant", "consulting", "municipal", "municipality",
     "royal", "politics", "politician", "police", "authority", "authorities", "surveillance", "research", "europe",
