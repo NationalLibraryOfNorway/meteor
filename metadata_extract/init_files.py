@@ -57,26 +57,31 @@ class InitFiles:
         keywords = []
         with files("metadata_extract.data").joinpath("txt/info_page_keywords.json").open() as file:
             languages = json.load(file)
-            [keywords.extend(languages[lang]) for lang in self.languages if lang in languages]
+            for lang in filter(lambda x: x in languages, self.languages):
+                keywords.extend(languages[lang])
         return keywords
 
     def __init_stopwords(self) -> list[str]:
         stopwords = []
         with files("metadata_extract.data").joinpath("txt/stopwords.json").open() as file:
             languages = json.load(file)
-            [stopwords.extend(languages[lang]) for lang in self.languages if lang in languages]
+            for lang in filter(lambda x: x in languages, self.languages):
+                stopwords.extend(languages[lang])
         return stopwords
 
     def __init_labels(self) -> dict[str, str]:
-        labels = {}
+        labels: dict[str, str] = {}
         with files("metadata_extract.data").joinpath("txt/labels.json").open() as file:
-            languages = json.load(file)
-            [self.__get_labels_from_lang(labels, lang, languages) for lang in self.languages if lang in languages]
+            languages: dict[str, Any] = json.load(file)
+            for lang in filter(lambda x: x in languages, self.languages):
+                self.__get_labels_from_lang(labels, lang, languages)
         for key in labels:
             labels[key] = labels[key].lstrip("|").rstrip("|")
         return labels
 
-    def __get_labels_from_lang(self, labels: dict, lang, languages) -> None:
+    def __get_labels_from_lang(
+            self, labels: dict[str, str], lang: str, languages: dict[str, Any]
+    ) -> None:
         for key in languages[lang]:
             if key not in labels:
                 labels[key] = ""
