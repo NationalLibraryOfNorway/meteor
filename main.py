@@ -79,5 +79,6 @@ def display_error_message_in_template(request: Request, exc: StarletteHTTPExcept
                 'error': str(exc.detail)
             },
             "root_path": Utils.get_environment_prefix()
-        }
+        },
+        status_code=exc.status_code
     )

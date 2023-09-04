@@ -78,6 +78,11 @@ class Metadata:
                               reverse=True)
         return sorted_years[0].to_dict()
 
+    def choose_language(self) -> Optional[CandidateType]:
+        if 'language' not in self.candidates:
+            return None
+        return self.candidates['language'][0].to_dict()
+
     def choose_isxn(self, identifier: str) -> Optional[CandidateType]:
         if identifier not in self.candidates:
             return None
@@ -143,7 +148,7 @@ class Metadata:
 
     def choose_best(self) -> None:
         self.results['year'] = self.rank_years()
-        self.results['language'] = self.candidates['language'][0].to_dict()
+        self.results['language'] = self.choose_language()
         self.results['title'] = self.choose_title()
         self.results['publisher'] = self.choose_publishers()
         self.results['publicationType'] = self.choose_doc_type()
