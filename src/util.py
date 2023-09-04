@@ -93,10 +93,10 @@ class Utils:
         try:
             results = self.meteor.run(filepath)
             return results
-        except Exception:
+        except Exception as exc:
             print(traceback.format_exc())
-            raise HTTPException(status_code=500,
-                                detail=f'Error while processing file {filename}')
+            raise HTTPException(detail=f'Error while processing file {filename}',
+                                status_code=500) from exc
         finally:
             if delete_immediately:
                 os.remove(filepath)
