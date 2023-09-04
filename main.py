@@ -80,5 +80,5 @@ def display_error_message_in_template(request: Request, exc: StarletteHTTPExcept
             },
             "root_path": Utils.get_environment_prefix()
         },
-        status_code = exc.status_code
+        status_code=exc.status_code
     )
