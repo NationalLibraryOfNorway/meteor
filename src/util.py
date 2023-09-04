@@ -95,7 +95,8 @@ class Utils:
             return results
         except Exception:
             print(traceback.format_exc())
-            return {'error': f'Error while processing file {filename if filename else ""}'}
+            raise HTTPException(status_code=500,
+                                detail=f'Error while processing file {filename}')
         finally:
             if delete_immediately:
                 os.remove(filepath)
