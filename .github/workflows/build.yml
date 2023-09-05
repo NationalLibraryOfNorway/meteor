@@ -1,0 +1,35 @@
+name: Create image without pushing
+
+on:
+  push
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  build:
+    name: Create Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/meteor
+          tags: |
+            type=semver,pattern={{version}}
+            type=ref,event=branch
+            type=ref,event=pr
+
+      - name: Build image
+        uses: docker/build-push-action@v4
+        with:
+          push: false
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          file: Dockerfile
+          build-args: |
+            USE_GIELLA=true
