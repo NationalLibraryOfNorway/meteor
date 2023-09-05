@@ -23,7 +23,7 @@ if args.registry:
     meteor.set_registry(registry)
 
 if args.giella:
-    import gielladetect
+    import gielladetect  # pylint: disable=import-error
     meteor.set_language_detection_method(gielladetect.detect)
 
 r = meteor.run(args.filename)
