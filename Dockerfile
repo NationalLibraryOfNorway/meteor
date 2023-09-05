@@ -15,11 +15,7 @@ RUN pip install --upgrade pip ; \
     pip install -r requirements.txt
 
 RUN if [ "$USE_GIELLA" = "true" ] ; then \
-    apt-get update ; \
-    apt-get -y install git ; \
-    git clone https://github.com/NationalLibraryOfNorway/gielladetect.git ; \
-    cd gielladetect ; \
-    python -m pip install . ; \
+    pip install gielladetect ; \
     fi
 
 CMD [ "uvicorn", "main:app", "--proxy-headers", "--host", "0.0.0.0", "--port", "8000" ]
