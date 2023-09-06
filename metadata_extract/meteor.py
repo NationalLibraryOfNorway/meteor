@@ -31,9 +31,7 @@ class Meteor:
             lang = langdetect.detect(text)
         except LangDetectException:
             return None
-        if not isinstance(lang, str):
-            raise RuntimeError(f"Unexpected type for detected language: {type(lang)}")
-        if lang == "unknown":
+        if not isinstance(lang, str) or lang == "unknown":
             return None
         return lang
 
