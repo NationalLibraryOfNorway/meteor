@@ -26,7 +26,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: nationallibraryofnorway/meteor-test
+          images: nationallibraryofnorway/meteor
           tags: |
             type=semver,pattern={{version}}
             type=ref,event=branch
@@ -48,6 +48,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          repository: nationallibraryofnorway/meteor-test
+          repository: nationallibraryofnorway/meteor
           short-description: ${{ github.event.repository.description }}
           readme-filepath: ./README.md
