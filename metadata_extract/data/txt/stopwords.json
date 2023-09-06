@@ -1,4 +1,13 @@
 {
+  "eng": [
+    "academy", "university", "director", "directorate", "defence", "military", "researcher", "senior researcher",
+    "research leader", "research manager", "professor", "college", "consultant", "consulting", "municipal", "municipality",
+    "royal", "politics", "politician", "police", "authority", "authorities", "surveillance", "research", "europe",
+    "america", "county", "office", "senior advisor", "advisor", "senior advisors", "project", "project manager",
+    "laboratory", "parliament", "system", "science", "section", "school", "faculty", "norway", "norwegian",
+    "scandinavia", "strategic", "teacher", "agency", "assistant", "organization", "center", "department", "division",
+    "governor", "institute", "international", "world", "policy", "program", "report", "science", "ministry", "ministries"
+  ],
   "nob": [
     "akademi", "universitet", "direktorat", "direktoratet", "forsvar", "militær", "forsker", "seniorforsker",
     "forskningsleder", "forskningssjef", "professor", "høgskole", "høyskole", "konsulent", "kommunal", "kommune",
@@ -18,14 +27,5 @@
     "vitskap", "seksjon", "skule", "fakultet", "norge", "norsk", "seniorforskar", "skandinavia", "strategisk",
     "lærer", "byrå", "assistent", "assisterande", "organisasjon", "senter", "departement", "avdeling", "fylkesmann",
     "institutt", "internasjonal", "verda", "program", "rapport", "vitskap"
-  ],
-  "eng": [
-    "academy", "university", "director", "directorate", "defence", "military", "researcher", "senior researcher",
-    "research leader", "research manager", "professor", "college", "consultant", "consulting", "municipal", "municipality",
-    "royal", "politics", "politician", "police", "authority", "authorities", "surveillance", "research", "europe",
-    "america", "county", "office", "senior advisor", "advisor", "senior advisors", "project", "project manager",
-    "laboratory", "parliament", "system", "science", "section", "school", "faculty", "norway", "norwegian",
-    "scandinavia", "strategic", "teacher", "agency", "assistant", "organization", "center", "department", "division",
-    "governor", "institute", "international", "world", "policy", "program", "report", "science", "ministry", "ministries"
   ]
 }
