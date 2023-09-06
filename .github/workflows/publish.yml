@@ -1,7 +1,9 @@
 name: Create image and push to dockerhub
 
 on:
-  push
+  push:
+    branches:
+      - main
 
 jobs:
   build:
@@ -46,6 +48,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          repository: NationalLibraryOfNorway/meteor
+          repository: nationallibraryofnorway/meteor-test
           short-description: ${{ github.event.repository.description }}
           readme-filepath: ./README.md

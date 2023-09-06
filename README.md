@@ -90,4 +90,5 @@ licensed under the Apache License 2.0. The licenses are compatible, but
 depending on legal interpretation, the terms of the GPLv3 (for example the
 requirement to publish corresponding source code when publishing an executable
 application) may be considered to apply to the whole of Meteor+gielladetect if you
-decide to install the optional gielladetect dependency.
+decide to install the optional gielladetect dependency. Note that the image published
+on DockerHub is built with gielladetect and thus falls under GPLv3.
