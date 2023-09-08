@@ -4,9 +4,9 @@
 from typing import Optional, TypedDict
 from fitz import Document
 
-from metadata_extract.init_files import InitFiles
 from . import text
 from .author_name import get_author_names
+from .resource_loader import ResourceLoader
 from .page import Page, TextBlock
 
 
@@ -30,9 +30,6 @@ class InfoPage(Page):
     HASKEYWORD = 4
     KEYWORDFONT = 8
 
-    # TODO: add nynorsk / samisk words
-    keywords = InitFiles().get_info_page_keywords()
-
     @staticmethod
     def find_page_number(pages: dict[int, str]) -> int:
         """Looks for the info page, based on a keyword list.
@@ -42,7 +39,7 @@ class InfoPage(Page):
         scores: dict[int, int] = {}
         for page in pages:
             score = 0
-            for k in InfoPage.keywords:
+            for k in ResourceLoader.get_info_page_keywords():
                 if k in pages[page].lower():
                     score += 1
             scores[page] = score
@@ -53,7 +50,7 @@ class InfoPage(Page):
 
     @staticmethod
     def keyword_appears_in(string: str) -> bool:
-        for k in InfoPage.keywords:
+        for k in ResourceLoader.get_info_page_keywords():
             if k in string.lower():
                 return True
         return False
@@ -136,7 +133,7 @@ class InfoPage(Page):
     def find_author(self) -> Optional[list[str]]:
         author_block = None
         for block in self.text_blocks:
-            if text.AUTHOR_LABEL.match(block.text.lower()):
+            if text.author_label().match(block.text.lower()):
                 author_block = block
                 break
         if author_block:

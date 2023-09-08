@@ -100,7 +100,7 @@ class Finder:
         Returns after first value is found."""
         for number, page in self.doc.pages.items():
             for line in page.split('\n'):
-                match = text.PUBLISHER_LABEL.match(line)
+                match = text.publisher_label().match(line)
                 if match is not None:
                     value = line[match.span()[1]:].strip()
                     if value != '':
@@ -134,7 +134,7 @@ class Finder:
             if found_title and isinstance(found_title, str) \
                and author_name.name_exists_in_title(found_title, author):
                 continue
-            if any(keyword in author.lower() for keyword in text.STOPWORDS):
+            if any(keyword in author.lower() for keyword in text.stopwords()):
                 continue
             if author_name.is_all_caps_spaced(author):
                 continue
@@ -189,10 +189,10 @@ class Finder:
         # TODO: Seems to only fetch first author before comma from pdfinfo
         if self.doc.pdfinfo['author']:
             author = self.doc.pdfinfo['author']
-            name_match = text.NAME_PATTERN.findall(author)
+            name_match = text.name_pattern().findall(author)
             for match in name_match:
                 found_on_page = text.find_in_pages(match, self.doc.pages)
-                if any(keyword in author.lower() for keyword in text.STOPWORDS):
+                if any(keyword in author.lower() for keyword in text.stopwords()):
                     continue
                 if found_on_page > 0:
                     candidate = Candidate(author_name.create_author_dict(match),

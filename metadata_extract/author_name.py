@@ -33,7 +33,7 @@ def get_author_names(text_block: str) -> Optional[list[str]]:
 def remove_multi_capital_letter(authors: list[str]) -> list[str]:
     """Remove all names with multiple sequential capital letters"""
     return [author for author in authors
-            if not text.DOUBLE_CAPITAL_LETTER_PATTERN.search(author)]
+            if not text.double_capital_letter_pattern().search(author)]
 
 
 def remove_non_author_name(name: str) -> Optional[str]:
@@ -44,7 +44,7 @@ def remove_non_author_name(name: str) -> Optional[str]:
 
 def remove_parenthesis(author_text: str) -> str:
     """Remove all parenthesis and text inside them"""
-    parenthesis_match = text.PARENTHESIS_PATTERN.findall(author_text)
+    parenthesis_match = text.parenthesis_pattern().findall(author_text)
     if parenthesis_match:
         for match in parenthesis_match:
             author_text = author_text.replace(match, "")
@@ -53,7 +53,7 @@ def remove_parenthesis(author_text: str) -> str:
 
 def match_text_name_regex(author_text: str) -> Optional[str]:
     """Match all names in text to name_pattern regular expression"""
-    name_match = text.NAME_PATTERN.findall(author_text)
+    name_match = text.name_pattern().findall(author_text)
     if name_match:
         author_text = ", ".join(name_match)
         return author_text
@@ -82,7 +82,7 @@ def is_probable_name_block(text_block: str) -> bool:
     text_block = text.substitute_special_char_and_binding(text_block)
 
     # Step 2: Check if the block and the match have the same length
-    match_block = "".join(text.NAME_PATTERN.findall(text_block))
+    match_block = "".join(text.name_pattern().findall(text_block))
     return len(text_block) == len(match_block)
 
 

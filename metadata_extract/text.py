@@ -1,10 +1,11 @@
 """Text module, containing methods and logic dealing with strings and regexes."""
 
 import re
-from typing import Optional
+from typing import Optional, Pattern
+
 import regex
 
-from metadata_extract.init_files import InitFiles
+from metadata_extract.resource_loader import ResourceLoader
 
 
 class ValueAndContext:
@@ -17,29 +18,79 @@ class ValueAndContext:
         self.context = (self.context or '') + extra_context
 
 
-files = InitFiles()
-LABELS = files.get_labels()
-STOPWORDS = files.get_stopwords()
+def labels() -> dict[str, str]:
+    return ResourceLoader.get_labels()
+
+
+def stopwords() -> list[str]:
+    return ResourceLoader.get_stopwords()
+
+
+def info_page_keywords() -> list[str]:
+    return ResourceLoader.get_info_page_keywords()
+
 
 ISXN_PATTERN = {
     'ISSN': re.compile(r"\D(\d{4}[–-][\dX]{4})\D"),
     'ISBN': re.compile(r"\D([\d–-]{13,17})\D")
 }
-REPORT_PATTERN = re.compile(fr'^(\w+)\W({LABELS["report"]})\W', re.IGNORECASE)
-TYPE_PATTERN_1 = re.compile(fr'\b({LABELS["reportType"]})\b', re.IGNORECASE)
-TYPE_PATTERN_2 = re.compile(r'\bNOU\b')
-DOC_TYPE_MAPPING = files.get_doc_type_mapping()
-PUBLISHER_LABEL = re.compile(fr'({LABELS["publisher"]}):?', re.IGNORECASE)
-NO_LETTERS_PATTERN = re.compile(r'^[\W\d]+$')
-AUTHOR_LABEL = re.compile(fr'({LABELS["author"]}):?', re.IGNORECASE)
-NAME_PATTERN = regex.compile(r"\b[^\P{Lu}][^\P{Ll}]*[-|‐]?[^\P{Lu}]?[^\P{Ll}’]*\.?" +
-                             r"(?: [^\P{Lu}][^\P{Ll}’]*[-|‐]?[^\P{Lu}]?[^\P{Ll}]*\.?)+\b(?! *\()")
-PARENTHESIS_PATTERN = re.compile(r"\(.*?\)")
-DOUBLE_CAPITAL_LETTER_PATTERN = re.compile(r"\b[A-Z]{2,}\b")
-BINDING_WORD_PATTERN = re.compile(fr'\b(?:{LABELS["bindingWords"]})\b|&|,')
-SPECIAL_CHAR_AND_BINDING_PATTERN = re.compile(fr'[;:,.]|({LABELS["bindingWords"]})\b|&+')
-NON_ALPHANUMERIC_PATTERN = re.compile(r"\W+")
-PHOTOGRAPH_LABEL = re.compile(fr'\b({LABELS["photo"]})\b', re.IGNORECASE)
+
+
+def report_pattern() -> Pattern[str]:
+    return re.compile(fr'^(\w+)\W({labels()["report"]})\W', re.IGNORECASE)
+
+
+def type_pattern_1() -> Pattern[str]:
+    return re.compile(fr'\b({labels()["reportType"]})\b', re.IGNORECASE)
+
+
+def type_pattern_2() -> Pattern[str]:
+    return re.compile(r'\bNOU\b')
+
+
+def doc_type_mapping() -> dict[str, str]:
+    return ResourceLoader.get_doc_type_mapping()
+
+
+def publisher_label() -> Pattern[str]:
+    return re.compile(fr'({labels()["publisher"]}):?', re.IGNORECASE)
+
+
+def no_letters_pattern() -> Pattern[str]:
+    return re.compile(r'^[\W\d]+$')
+
+
+def author_label() -> Pattern[str]:
+    return re.compile(fr'({labels()["author"]}):?', re.IGNORECASE)
+
+
+def name_pattern() -> regex.regex.Pattern[str]:
+    return regex.compile(r"\b[^\P{Lu}][^\P{Ll}]*[-|‐]?[^\P{Lu}]?[^\P{Ll}’]*\.?" +
+                         r"(?: [^\P{Lu}][^\P{Ll}’]*[-|‐]?[^\P{Lu}]?[^\P{Ll}]*\.?)+\b(?! *\()")
+
+
+def parenthesis_pattern() -> Pattern[str]:
+    return re.compile(r"\(.*?\)")
+
+
+def double_capital_letter_pattern() -> Pattern[str]:
+    return re.compile(r"\b[A-Z]{2,}\b")
+
+
+def binding_word_pattern() -> Pattern[str]:
+    return re.compile(fr'\b(?:{labels()["bindingWords"]})\b|&|,')
+
+
+def special_char_and_binding_pattern() -> Pattern[str]:
+    return re.compile(fr'[;:,.]|({labels()["bindingWords"]})\b|&+')
+
+
+def non_alphanumeric_pattern() -> Pattern[str]:
+    return re.compile(r"\W+")
+
+
+def photograph_label() -> Pattern[str]:
+    return re.compile(fr'\b({labels()["photo"]})\b', re.IGNORECASE)
 
 
 def find_in_pages(title: str, pages: dict[int, str], max_pages: int = 3) -> int:
@@ -63,7 +114,7 @@ def find_isxn(identifier: str, text: str) -> Optional[ValueAndContext]:
 
 
 def find_report_prefix(text: str) -> Optional[str]:
-    match = REPORT_PATTERN.search(text + '.')
+    match = report_pattern().search(text + '.')
     if match:
         prefix = match.group(1)
         if prefix.isupper():
@@ -72,20 +123,20 @@ def find_report_prefix(text: str) -> Optional[str]:
 
 
 def find_doc_type(page_text: str) -> Optional[str]:
-    match = TYPE_PATTERN_1.search(page_text)
+    match = type_pattern_1().search(page_text)
     if match:
         doc_type = match.group(1).lower()
-        if doc_type in DOC_TYPE_MAPPING:
-            return DOC_TYPE_MAPPING[doc_type]
+        if doc_type in doc_type_mapping():
+            return doc_type_mapping()[doc_type]
         return doc_type
-    match = TYPE_PATTERN_2.search(page_text)
+    match = type_pattern_2().search(page_text)
     if match:
         return "nou"
     return None
 
 
 def has_no_letters(text: str) -> bool:
-    return bool(NO_LETTERS_PATTERN.match(text))
+    return bool(no_letters_pattern().match(text))
 
 
 def clean_whitespace(text: str) -> str:
@@ -93,16 +144,16 @@ def clean_whitespace(text: str) -> str:
 
 
 def split_on_binding_word(text: str) -> list[str]:
-    return BINDING_WORD_PATTERN.split(text)
+    return binding_word_pattern().split(text)
 
 
 def substitute_special_char_and_binding(text: str) -> str:
-    return SPECIAL_CHAR_AND_BINDING_PATTERN.sub('', text).replace("  ", " ").strip()
+    return special_char_and_binding_pattern().sub('', text).replace("  ", " ").strip()
 
 
 def substitute_non_alphanumeric(text: str) -> str:
-    return NON_ALPHANUMERIC_PATTERN.sub(' ', text).strip()
+    return non_alphanumeric_pattern().sub(' ', text).strip()
 
 
 def has_non_author_keywords(text: str) -> bool:
-    return bool(re.search(PHOTOGRAPH_LABEL, text))
+    return bool(re.search(photograph_label(), text))

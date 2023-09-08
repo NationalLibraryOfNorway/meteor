@@ -129,7 +129,7 @@ class Page:
     def find_publisher_block(self) -> Optional[TextBlock]:
         publisher_block = None
         for block in self.text_blocks:
-            if text.PUBLISHER_LABEL.match(block.text.lower()):
+            if text.publisher_label().match(block.text.lower()):
                 publisher_block = block
                 break
         return publisher_block
