@@ -17,7 +17,7 @@
     "stikkord", "land", "fylke", "rapport", "godkjennere", "redaktørar", "oppdragsgivar", "tilgjengelegheit",
     "kontaktperson", "oppdrag", "referanse", "publikasjonstype", "publiseringstype", "sitering", "signatur"
   ],
-  "und": [
+  "mul": [
     "isbn", "issn", "©"
   ]
 }
