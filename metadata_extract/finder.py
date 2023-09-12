@@ -15,6 +15,7 @@ from .infopage import InfoPage
 from .metadata import Metadata
 from .meteor_document import MeteorDocument
 from .registry import PublisherRegistry, RegistryType
+from .resource_loader import ResourceLoader
 
 
 class CopyrightType(TypedDict):
@@ -134,7 +135,7 @@ class Finder:
             if found_title and isinstance(found_title, str) \
                and author_name.name_exists_in_title(found_title, author):
                 continue
-            if any(keyword in author.lower() for keyword in text.stopwords()):
+            if any(keyword in author.lower() for keyword in ResourceLoader.get_stopwords()):
                 continue
             if author_name.is_all_caps_spaced(author):
                 continue
@@ -192,7 +193,7 @@ class Finder:
             name_match = text.name_pattern().findall(author)
             for match in name_match:
                 found_on_page = text.find_in_pages(match, self.doc.pages)
-                if any(keyword in author.lower() for keyword in text.stopwords()):
+                if any(keyword in author.lower() for keyword in ResourceLoader.get_stopwords()):
                     continue
                 if found_on_page > 0:
                     candidate = Candidate(author_name.create_author_dict(match),

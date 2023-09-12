@@ -18,16 +18,8 @@ class ValueAndContext:
         self.context = (self.context or '') + extra_context
 
 
-def labels() -> dict[str, str]:
+def __labels() -> dict[str, str]:
     return ResourceLoader.get_labels()
-
-
-def stopwords() -> list[str]:
-    return ResourceLoader.get_stopwords()
-
-
-def info_page_keywords() -> list[str]:
-    return ResourceLoader.get_info_page_keywords()
 
 
 ISXN_PATTERN = {
@@ -37,23 +29,19 @@ ISXN_PATTERN = {
 
 
 def report_pattern() -> Pattern[str]:
-    return re.compile(fr'^(\w+)\W({labels()["report"]})\W', re.IGNORECASE)
+    return re.compile(fr'^(\w+)\W({__labels()["report"]})\W', re.IGNORECASE)
 
 
 def type_pattern_1() -> Pattern[str]:
-    return re.compile(fr'\b({labels()["reportType"]})\b', re.IGNORECASE)
+    return re.compile(fr'\b({__labels()["reportType"]})\b', re.IGNORECASE)
 
 
 def type_pattern_2() -> Pattern[str]:
     return re.compile(r'\bNOU\b')
 
 
-def doc_type_mapping() -> dict[str, str]:
-    return ResourceLoader.get_doc_type_mapping()
-
-
 def publisher_label() -> Pattern[str]:
-    return re.compile(fr'({labels()["publisher"]}):?', re.IGNORECASE)
+    return re.compile(fr'({__labels()["publisher"]}):?', re.IGNORECASE)
 
 
 def no_letters_pattern() -> Pattern[str]:
@@ -61,7 +49,7 @@ def no_letters_pattern() -> Pattern[str]:
 
 
 def author_label() -> Pattern[str]:
-    return re.compile(fr'({labels()["author"]}):?', re.IGNORECASE)
+    return re.compile(fr'({__labels()["author"]}):?', re.IGNORECASE)
 
 
 def name_pattern() -> regex.regex.Pattern[str]:
@@ -78,11 +66,11 @@ def double_capital_letter_pattern() -> Pattern[str]:
 
 
 def binding_word_pattern() -> Pattern[str]:
-    return re.compile(fr'\b(?:{labels()["bindingWords"]})\b|&|,')
+    return re.compile(fr'\b(?:{__labels()["bindingWords"]})\b|&|,')
 
 
 def special_char_and_binding_pattern() -> Pattern[str]:
-    return re.compile(fr'[;:,.]|({labels()["bindingWords"]})\b|&+')
+    return re.compile(fr'[;:,.]|({__labels()["bindingWords"]})\b|&+')
 
 
 def non_alphanumeric_pattern() -> Pattern[str]:
@@ -90,7 +78,7 @@ def non_alphanumeric_pattern() -> Pattern[str]:
 
 
 def photograph_label() -> Pattern[str]:
-    return re.compile(fr'\b({labels()["photo"]})\b', re.IGNORECASE)
+    return re.compile(fr'\b({__labels()["photo"]})\b', re.IGNORECASE)
 
 
 def find_in_pages(title: str, pages: dict[int, str], max_pages: int = 3) -> int:
@@ -126,8 +114,8 @@ def find_doc_type(page_text: str) -> Optional[str]:
     match = type_pattern_1().search(page_text)
     if match:
         doc_type = match.group(1).lower()
-        if doc_type in doc_type_mapping():
-            return doc_type_mapping()[doc_type]
+        if doc_type in ResourceLoader.get_doc_type_mapping():
+            return ResourceLoader.get_doc_type_mapping()[doc_type]
         return doc_type
     match = type_pattern_2().search(page_text)
     if match:

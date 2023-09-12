@@ -1,0 +1,14 @@
+{
+  "nob": {
+    "årsrapport": "annualReport",
+    "evaluering": "evaluation",
+    "veileder": "guidance",
+    "undersøkelse": "survey"
+  },
+  "nno": {
+    "årsrapport": "annualReport",
+    "evaluering": "evaluation",
+    "veileiar": "guidance",
+    "undersøking": "survey"
+  }
+}

@@ -6,7 +6,7 @@ from metadata_extract.meteor_document import MeteorDocument
 from metadata_extract.resource_loader import ResourceLoader
 
 doc = MeteorDocument('test/resources/report.pdf')
-ResourceLoader.load_info_page_keywords(["und", "eng", "nob", "nno"])
+ResourceLoader.load(["und", "eng", "nob", "nno"])
 infopagenr = InfoPage.find_page_number(doc.pages)
 
 

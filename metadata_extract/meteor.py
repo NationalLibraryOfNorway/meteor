@@ -21,9 +21,7 @@ class Meteor:
 
     def __init__(self, languages: Optional[list[str]] = None) -> None:
         self.registry: Optional[PublisherRegistry] = None
-        ResourceLoader.load_info_page_keywords(languages)
-        ResourceLoader.load_stopwords(languages)
-        ResourceLoader.load_labels(languages)
+        ResourceLoader.load(languages)
 
     def set_registry(self, registry: PublisherRegistry) -> None:
         self.registry = registry

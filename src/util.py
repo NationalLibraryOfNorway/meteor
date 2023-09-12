@@ -42,7 +42,7 @@ class Utils:
 
     @staticmethod
     def get_languages() -> list[str] | None:
-        if len(get_settings().LANGUAGES) == 0:
+        if not get_settings().LANGUAGES:
             return None
         return get_settings().LANGUAGES.split(',')
 

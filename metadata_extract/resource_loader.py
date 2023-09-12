@@ -13,84 +13,116 @@ class ResourceLoader:
         - txt/info_page_keywords.json
         - txt/stopwords.json
         - txt/labels.json
-        - txt/doc_type_mapping_no_en.json
+        - txt/doc_type_mapping.json
     """
     __info_page_keywords: list[str]
     __stopwords: list[str]
     __labels: dict[str, Any]
     __doc_type_mapping: dict[str, str]
 
-    __lang_info_page_keywords: dict[str, list[str]]
-    __lang_stopwords: dict[str, list[str]]
-    __lang_labels: dict[str, Any]
+    __lang_info_page_keywords: dict[str, list[str]] = {}
+    __lang_stopwords: dict[str, list[str]] = {}
+    __lang_labels: dict[str, Any] = {}
+    __lang_doc_type_mapping: dict[str, Any] = {}
 
     @staticmethod
-    def load_info_page_keywords(selected_languages: Optional[list[str]] = None) -> None:
-        with files("metadata_extract.data").joinpath("txt/info_page_keywords.json").open() as file:
-            info_page_keywords = json.load(file)
-            ResourceLoader.__lang_info_page_keywords = {}
-            if selected_languages:
-                for lang in filter(
-                        lambda x: x in info_page_keywords, selected_languages
-                ):
-                    ResourceLoader.__lang_info_page_keywords[lang] = info_page_keywords[lang]
-            else:
-                ResourceLoader.__lang_info_page_keywords = info_page_keywords
-
-    @staticmethod
-    def load_stopwords(selected_languages: Optional[list[str]] = None) -> None:
-        with files("metadata_extract.data").joinpath("txt/stopwords.json").open() as file:
-            stopwords = json.load(file)
-            ResourceLoader.__lang_stopwords = {}
-            if selected_languages:
-                for lang in filter(lambda x: x in stopwords, selected_languages):
-                    ResourceLoader.__lang_stopwords[lang] = stopwords[lang]
-            else:
-                ResourceLoader.__lang_stopwords = stopwords
-
-    @staticmethod
-    def load_labels(selected_languages: Optional[list[str]] = None) -> None:
-        with files("metadata_extract.data").joinpath("txt/labels.json").open() as file:
-            labels = json.load(file)
-            ResourceLoader.__lang_labels = {}
-            if selected_languages:
-                for lang in filter(lambda x: x in labels, selected_languages):
-                    ResourceLoader.__lang_labels[lang] = labels[lang]
-            else:
-                ResourceLoader.__lang_labels = labels
+    def load(selected_languages: Optional[list[str]] = None) -> None:
+        ResourceLoader.__load_info_page_keywords(selected_languages)
+        ResourceLoader.__load_stopwords(selected_languages)
+        ResourceLoader.__load_labels(selected_languages)
+        ResourceLoader.__load_doc_type_mapping(selected_languages)
 
     @staticmethod
     def get_info_page_keywords() -> list[str]:
-        keywords = []
-        for lang in ResourceLoader.__lang_info_page_keywords:
-            keywords.extend(ResourceLoader.__lang_info_page_keywords[lang])
-        ResourceLoader.__info_page_keywords = keywords
         return ResourceLoader.__info_page_keywords
 
     @staticmethod
     def get_stopwords() -> list[str]:
-        stopwords = []
-        for lang in ResourceLoader.__lang_stopwords:
-            stopwords.extend(ResourceLoader.__lang_stopwords[lang])
-        ResourceLoader.__stopwords = stopwords
         return ResourceLoader.__stopwords
 
     @staticmethod
     def get_labels() -> dict[str, str]:
+        return ResourceLoader.__labels
+
+    @staticmethod
+    def get_doc_type_mapping() -> dict[str, str]:
+        return ResourceLoader.__doc_type_mapping
+
+    @staticmethod
+    def __load_info_page_keywords(selected_languages: Optional[list[str]] = None) -> None:
+        if ResourceLoader.__lang_info_page_keywords:
+            return
+        with files("metadata_extract.data").joinpath("txt/info_page_keywords.json").open() as file:
+            keyword_data = json.load(file)
+        ResourceLoader.__lang_info_page_keywords = {}
+        if selected_languages:
+            for lang in filter(
+                    lambda x: x in keyword_data, selected_languages
+            ):
+                ResourceLoader.__lang_info_page_keywords[lang] = keyword_data[lang]
+        else:
+            ResourceLoader.__lang_info_page_keywords = keyword_data
+
+        keyword_list = []
+        for lang, items in ResourceLoader.__lang_info_page_keywords.items():
+            keyword_list.extend(items)
+        ResourceLoader.__info_page_keywords = keyword_list
+
+    @staticmethod
+    def __load_stopwords(selected_languages: Optional[list[str]] = None) -> None:
+        if ResourceLoader.__lang_stopwords:
+            return
+        with files("metadata_extract.data").joinpath("txt/stopwords.json").open() as file:
+            stopwords_data = json.load(file)
+        ResourceLoader.__lang_stopwords = {}
+        if selected_languages:
+            for lang in filter(lambda x: x in stopwords_data, selected_languages):
+                ResourceLoader.__lang_stopwords[lang] = stopwords_data[lang]
+        else:
+            ResourceLoader.__lang_stopwords = stopwords_data
+
+        stopwords_list = []
+        for lang, items in ResourceLoader.__lang_stopwords.items():
+            stopwords_list.extend(items)
+        ResourceLoader.__stopwords = stopwords_list
+
+    @staticmethod
+    def __load_labels(selected_languages: Optional[list[str]] = None) -> None:
+        if ResourceLoader.__lang_labels:
+            return
+        with files("metadata_extract.data").joinpath("txt/labels.json").open() as file:
+            label_data = json.load(file)
+        ResourceLoader.__lang_labels = {}
+        if selected_languages:
+            for lang in filter(lambda x: x in label_data, selected_languages):
+                ResourceLoader.__lang_labels[lang] = label_data[lang]
+        else:
+            ResourceLoader.__lang_labels = label_data
+
         labels: dict[str, str] = {}
-        for lang in ResourceLoader.__lang_labels:
-            for key in ResourceLoader.__lang_labels[lang]:
+        for lang, label_dict in ResourceLoader.__lang_labels.items():
+            for key in label_dict:
                 if key not in labels:
                     labels[key] = ""
                 labels[key] += "|" + "|".join(ResourceLoader.__lang_labels[lang][key])
         for key in labels:
             labels[key] = labels[key].lstrip("|").rstrip("|")
         ResourceLoader.__labels = labels
-        return ResourceLoader.__labels
 
     @staticmethod
-    def get_doc_type_mapping() -> dict[str, str]:
+    def __load_doc_type_mapping(selected_languages: Optional[list[str]] = None) -> None:
+        if ResourceLoader.__lang_doc_type_mapping:
+            return
         with files("metadata_extract.data") \
-                .joinpath("txt/doc_type_mapping_no_en.json").open() as file:
-            ResourceLoader.__doc_type_mapping = json.load(file)
-        return ResourceLoader.__doc_type_mapping
+                .joinpath("txt/doc_type_mapping.json").open() as file:
+            ResourceLoader.__lang_doc_type_mapping = json.load(file)
+
+        doc_type_mapping: dict[str, str] = {}
+        if selected_languages:
+            for lang in filter(
+                    lambda x: x in ResourceLoader.__lang_doc_type_mapping, selected_languages
+            ):
+                doc_type_mapping.update(ResourceLoader.__lang_doc_type_mapping[lang])
+        else:
+            doc_type_mapping = ResourceLoader.__lang_doc_type_mapping
+        ResourceLoader.__doc_type_mapping = doc_type_mapping
