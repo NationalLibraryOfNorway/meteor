@@ -1,3 +1,39 @@
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "metadata_extract"
+version = "1.0.0"
+classifiers = [
+    "License :: OSI Approved :: Apache Software License"
+]
+license = {text = "Apache-2.0"}
+dependencies = [
+    "pymupdf==1.21.1",
+    "python-dateutil==2.8.1",
+    "dateparser==1.1.6",
+    "regex==2023.5.5",
+    "langdetect==1.0.9"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["metadata_extract", "metadata_extract.data.txt"]
+
+[tool.setuptools.package-data]
+"metadata_extract.data.txt" = ["*.json"]
+
+[tool.flake8]
+max-line-length = 100
+exclude = ["static", "templates", "__pycache__", "venv", "build"]
+
+[tool.pylint.'MESSAGES CONTROL']
+disable = "missing-function-docstring,fixme,too-few-public-methods"
+
+[tool.mypy]
+strict = "True"
+
+[[tool.mypy.overrides]]
+module = [ "langdetect.*", "fitz", "decouple", "deepdiff" ]
+ignore_missing_imports = true
