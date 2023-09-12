@@ -17,10 +17,8 @@ class ResourceLoader:
     """
     __info_page_keywords: list[str] = []
     __stopwords: list[str] = []
-    __labels: dict[str, Any]
-    __doc_type_mapping: dict[str, str]
-    __lang_labels: dict[str, Any] = {}
-    __lang_doc_type_mapping: dict[str, Any] = {}
+    __labels: dict[str, Any] = {}
+    __doc_type_mapping: dict[str, str] = {}
 
     @staticmethod
     def load(selected_languages: Optional[list[str]] = None) -> None:
@@ -68,41 +66,31 @@ class ResourceLoader:
 
     @staticmethod
     def __load_labels(selected_languages: Optional[list[str]] = None) -> None:
-        if ResourceLoader.__lang_labels:
+        if ResourceLoader.__labels:
             return
         with files("metadata_extract.data").joinpath("txt/labels.json").open() as file:
             label_data = json.load(file)
-        ResourceLoader.__lang_labels = {}
-        if selected_languages:
-            for lang in filter(lambda x: x in label_data, selected_languages):
-                ResourceLoader.__lang_labels[lang] = label_data[lang]
-        else:
-            ResourceLoader.__lang_labels = label_data
-
         labels: dict[str, str] = {}
-        for lang, label_dict in ResourceLoader.__lang_labels.items():
-            for key in label_dict:
-                if key not in labels:
-                    labels[key] = ""
-                labels[key] += "|" + "|".join(ResourceLoader.__lang_labels[lang][key])
+        for lang in label_data:
+            if selected_languages is None or lang in selected_languages:
+                for key in label_data[lang]:
+                    if key not in labels:
+                        labels[key] = ""
+                    labels[key] += "|" + "|".join(label_data[lang][key])
         for key in labels:
             labels[key] = labels[key].lstrip("|").rstrip("|")
         ResourceLoader.__labels = labels
 
     @staticmethod
     def __load_doc_type_mapping(selected_languages: Optional[list[str]] = None) -> None:
-        if ResourceLoader.__lang_doc_type_mapping:
+        if ResourceLoader.__doc_type_mapping:
             return
         with files("metadata_extract.data") \
                 .joinpath("txt/doc_type_mapping.json").open() as file:
-            ResourceLoader.__lang_doc_type_mapping = json.load(file)
+            doc_type_mapping_data = json.load(file)
 
         doc_type_mapping: dict[str, str] = {}
-        if selected_languages:
-            for lang in filter(
-                    lambda x: x in ResourceLoader.__lang_doc_type_mapping, selected_languages
-            ):
-                doc_type_mapping.update(ResourceLoader.__lang_doc_type_mapping[lang])
-        else:
-            doc_type_mapping = ResourceLoader.__lang_doc_type_mapping
+        for lang in doc_type_mapping_data:
+            if selected_languages is None or lang in selected_languages:
+                doc_type_mapping.update(doc_type_mapping_data[lang])
         ResourceLoader.__doc_type_mapping = doc_type_mapping
