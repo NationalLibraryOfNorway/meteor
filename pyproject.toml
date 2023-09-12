@@ -35,5 +35,5 @@ disable = "missing-function-docstring,fixme,too-few-public-methods"
 strict = "True"
 
 [[tool.mypy.overrides]]
-module = [ "langdetect.*", "fitz", "decouple", "deepdiff" ]
+module = [ "langdetect.*", "fitz", "decouple", "deepdiff", "gielladetect" ]
 ignore_missing_imports = true
