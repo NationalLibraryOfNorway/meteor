@@ -22,63 +22,107 @@ def __labels() -> dict[str, str]:
     return ResourceLoader.get_labels()
 
 
-ISXN_PATTERN = {
+__PATTERNS: dict[str, Pattern[str]] = {
     'ISSN': re.compile(r"\D(\d{4}[–-][\dX]{4})\D"),
     'ISBN': re.compile(r"\D([\d–-]{13,17})\D")
 }
+__NAME_PATTERN: dict[str, regex.regex.Pattern[str]] = {}
+
+
+def issn_pattern() -> Pattern[str]:
+    if 'ISSN' not in __PATTERNS:
+        __PATTERNS['ISSN'] = re.compile(r"\D(\d{4}[–-][\dX]{4})\D")
+    return __PATTERNS['ISSN']
+
+
+def isbn_pattern() -> Pattern[str]:
+    if 'ISBN' not in __PATTERNS:
+        __PATTERNS['ISBN'] = re.compile(r"\D([\d–-]{13,17})\D")
+    return __PATTERNS['ISBN']
 
 
 def report_pattern() -> Pattern[str]:
-    return re.compile(fr'^(\w+)\W({__labels()["report"]})\W', re.IGNORECASE)
+    if 'report' not in __PATTERNS:
+        __PATTERNS['report'] = re.compile(fr'^(\w+)\W({__labels()["report"]})\W', re.IGNORECASE)
+    return __PATTERNS['report']
 
 
 def type_pattern_1() -> Pattern[str]:
-    return re.compile(fr'\b({__labels()["reportType"]})\b', re.IGNORECASE)
+    if 'type_pattern_1' not in __PATTERNS:
+        __PATTERNS['type_pattern_1'] = re.compile(
+            fr'\b({__labels()["reportType"]})\b', re.IGNORECASE
+        )
+    return __PATTERNS['type_pattern_1']
 
 
 def type_pattern_2() -> Pattern[str]:
-    return re.compile(r'\bNOU\b')
+    if 'type_pattern_2' not in __PATTERNS:
+        __PATTERNS['type_pattern_2'] = re.compile(r'\bNOU\b')
+    return __PATTERNS['type_pattern_2']
 
 
 def publisher_label() -> Pattern[str]:
-    return re.compile(fr'({__labels()["publisher"]}):?', re.IGNORECASE)
+    if 'publisher' not in __PATTERNS:
+        __PATTERNS['publisher'] = re.compile(fr'({__labels()["publisher"]}):?', re.IGNORECASE)
+    return __PATTERNS['publisher']
 
 
 def no_letters_pattern() -> Pattern[str]:
-    return re.compile(r'^[\W\d]+$')
+    if 'no_letters' not in __PATTERNS:
+        __PATTERNS['no_letters'] = re.compile(r'^[\W\d]+$')
+    return __PATTERNS['no_letters']
 
 
 def author_label() -> Pattern[str]:
-    return re.compile(fr'({__labels()["author"]}):?', re.IGNORECASE)
+    if 'author' not in __PATTERNS:
+        __PATTERNS['author'] = re.compile(fr'({__labels()["author"]}):?', re.IGNORECASE)
+    return __PATTERNS['author']
 
 
 def name_pattern() -> regex.regex.Pattern[str]:
-    return regex.compile(r"\b[^\P{Lu}][^\P{Ll}]*[-|‐]?[^\P{Lu}]?[^\P{Ll}’]*\.?" +
-                         r"(?: [^\P{Lu}][^\P{Ll}’]*[-|‐]?[^\P{Lu}]?[^\P{Ll}]*\.?)+\b(?! *\()")
+    if 'name' not in __NAME_PATTERN:
+        __NAME_PATTERN['name'] = regex.compile(
+            r"\b[^\P{Lu}][^\P{Ll}]*[-|‐]?[^\P{Lu}]?[^\P{Ll}’]*\.?" +
+            r"(?: [^\P{Lu}][^\P{Ll}’]*[-|‐]?[^\P{Lu}]?[^\P{Ll}]*\.?)+\b(?! *\()")
+    return __NAME_PATTERN['name']
 
 
 def parenthesis_pattern() -> Pattern[str]:
-    return re.compile(r"\(.*?\)")
+    if 'parenthesis' not in __PATTERNS:
+        __PATTERNS['parenthesis'] = re.compile(r"\(.*?\)")
+    return __PATTERNS['parenthesis']
 
 
 def double_capital_letter_pattern() -> Pattern[str]:
-    return re.compile(r"\b[A-Z]{2,}\b")
+    if 'double_capital_letter' not in __PATTERNS:
+        __PATTERNS['double_capital_letter'] = re.compile(r"\b[A-Z]{2,}\b")
+    return __PATTERNS['double_capital_letter']
 
 
 def binding_word_pattern() -> Pattern[str]:
-    return re.compile(fr'\b(?:{__labels()["bindingWords"]})\b|&|,')
+    if 'binding_word' not in __PATTERNS:
+        __PATTERNS['binding_word'] = re.compile(fr'\b(?:{__labels()["bindingWords"]})\b|&|,')
+    return __PATTERNS['binding_word']
 
 
 def special_char_and_binding_pattern() -> Pattern[str]:
-    return re.compile(fr'[;:,.]|({__labels()["bindingWords"]})\b|&+')
+    if 'special_char_and_binding' not in __PATTERNS:
+        __PATTERNS['special_char_and_binding'] = re.compile(
+            fr'[;:,.]|({__labels()["bindingWords"]})\b|&+'
+        )
+    return __PATTERNS['special_char_and_binding']
 
 
 def non_alphanumeric_pattern() -> Pattern[str]:
-    return re.compile(r"\W+")
+    if 'non_alphanumeric' not in __PATTERNS:
+        __PATTERNS['non_alphanumeric'] = re.compile(r"\W+")
+    return __PATTERNS['non_alphanumeric']
 
 
 def photograph_label() -> Pattern[str]:
-    return re.compile(fr'\b({__labels()["photo"]})\b', re.IGNORECASE)
+    if 'photograph' not in __PATTERNS:
+        __PATTERNS['photograph'] = re.compile(fr'\b({__labels()["photo"]})\b', re.IGNORECASE)
+    return __PATTERNS['photograph']
 
 
 def find_in_pages(title: str, pages: dict[int, str], max_pages: int = 3) -> int:
@@ -95,7 +139,7 @@ def find_in_pages(title: str, pages: dict[int, str], max_pages: int = 3) -> int:
 
 
 def find_isxn(identifier: str, text: str) -> Optional[ValueAndContext]:
-    match = ISXN_PATTERN[identifier].search("." + text + ".")
+    match = __PATTERNS[identifier].search("." + text + ".")
     if match:
         return ValueAndContext(re.sub('–', '-', match.group(1)), text.lower())
     return None
