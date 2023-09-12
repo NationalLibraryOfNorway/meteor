@@ -1,7 +1,6 @@
 """Text module, containing methods and logic dealing with strings and regexes."""
 
-import re
-from typing import Optional, Pattern
+from typing import Optional
 
 import regex
 
@@ -22,106 +21,105 @@ def __labels() -> dict[str, str]:
     return ResourceLoader.get_labels()
 
 
-__PATTERNS: dict[str, Pattern[str]] = {
-    'ISSN': re.compile(r"\D(\d{4}[–-][\dX]{4})\D"),
-    'ISBN': re.compile(r"\D([\d–-]{13,17})\D")
+__PATTERNS: dict[str, regex.regex.Pattern[str]] = {
+    'ISSN': regex.compile(r"\D(\d{4}[–-][\dX]{4})\D"),
+    'ISBN': regex.compile(r"\D([\d–-]{13,17})\D")
 }
-__NAME_PATTERN: dict[str, regex.regex.Pattern[str]] = {}
 
 
-def issn_pattern() -> Pattern[str]:
+def issn_pattern() -> regex.regex.Pattern[str]:
     if 'ISSN' not in __PATTERNS:
-        __PATTERNS['ISSN'] = re.compile(r"\D(\d{4}[–-][\dX]{4})\D")
+        __PATTERNS['ISSN'] = regex.compile(r"\D(\d{4}[–-][\dX]{4})\D")
     return __PATTERNS['ISSN']
 
 
-def isbn_pattern() -> Pattern[str]:
+def isbn_pattern() -> regex.regex.Pattern[str]:
     if 'ISBN' not in __PATTERNS:
-        __PATTERNS['ISBN'] = re.compile(r"\D([\d–-]{13,17})\D")
+        __PATTERNS['ISBN'] = regex.compile(r"\D([\d–-]{13,17})\D")
     return __PATTERNS['ISBN']
 
 
-def report_pattern() -> Pattern[str]:
+def report_pattern() -> regex.regex.Pattern[str]:
     if 'report' not in __PATTERNS:
-        __PATTERNS['report'] = re.compile(fr'^(\w+)\W({__labels()["report"]})\W', re.IGNORECASE)
+        __PATTERNS['report'] = regex.compile(fr'^(\w+)\W({__labels()["report"]})\W(?i)')
     return __PATTERNS['report']
 
 
-def type_pattern_1() -> Pattern[str]:
+def type_pattern_1() -> regex.regex.Pattern[str]:
     if 'type_pattern_1' not in __PATTERNS:
-        __PATTERNS['type_pattern_1'] = re.compile(
-            fr'\b({__labels()["reportType"]})\b', re.IGNORECASE
+        __PATTERNS['type_pattern_1'] = regex.compile(
+            fr'\b({__labels()["reportType"]})\b(?i)'
         )
     return __PATTERNS['type_pattern_1']
 
 
-def type_pattern_2() -> Pattern[str]:
+def type_pattern_2() -> regex.regex.Pattern[str]:
     if 'type_pattern_2' not in __PATTERNS:
-        __PATTERNS['type_pattern_2'] = re.compile(r'\bNOU\b')
+        __PATTERNS['type_pattern_2'] = regex.compile(r'\bNOU\b')
     return __PATTERNS['type_pattern_2']
 
 
-def publisher_label() -> Pattern[str]:
+def publisher_label() -> regex.regex.Pattern[str]:
     if 'publisher' not in __PATTERNS:
-        __PATTERNS['publisher'] = re.compile(fr'({__labels()["publisher"]}):?', re.IGNORECASE)
+        __PATTERNS['publisher'] = regex.compile(fr'({__labels()["publisher"]}):?(?i)')
     return __PATTERNS['publisher']
 
 
-def no_letters_pattern() -> Pattern[str]:
+def no_letters_pattern() -> regex.regex.Pattern[str]:
     if 'no_letters' not in __PATTERNS:
-        __PATTERNS['no_letters'] = re.compile(r'^[\W\d]+$')
+        __PATTERNS['no_letters'] = regex.compile(r'^[\W\d]+$')
     return __PATTERNS['no_letters']
 
 
-def author_label() -> Pattern[str]:
+def author_label() -> regex.regex.Pattern[str]:
     if 'author' not in __PATTERNS:
-        __PATTERNS['author'] = re.compile(fr'({__labels()["author"]}):?', re.IGNORECASE)
+        __PATTERNS['author'] = regex.compile(fr'({__labels()["author"]}):?(?i)')
     return __PATTERNS['author']
 
 
 def name_pattern() -> regex.regex.Pattern[str]:
-    if 'name' not in __NAME_PATTERN:
-        __NAME_PATTERN['name'] = regex.compile(
+    if 'name' not in __PATTERNS:
+        __PATTERNS['name'] = regex.compile(
             r"\b[^\P{Lu}][^\P{Ll}]*[-|‐]?[^\P{Lu}]?[^\P{Ll}’]*\.?" +
             r"(?: [^\P{Lu}][^\P{Ll}’]*[-|‐]?[^\P{Lu}]?[^\P{Ll}]*\.?)+\b(?! *\()")
-    return __NAME_PATTERN['name']
+    return __PATTERNS['name']
 
 
-def parenthesis_pattern() -> Pattern[str]:
+def parenthesis_pattern() -> regex.regex.Pattern[str]:
     if 'parenthesis' not in __PATTERNS:
-        __PATTERNS['parenthesis'] = re.compile(r"\(.*?\)")
+        __PATTERNS['parenthesis'] = regex.compile(r"\(.*?\)")
     return __PATTERNS['parenthesis']
 
 
-def double_capital_letter_pattern() -> Pattern[str]:
+def double_capital_letter_pattern() -> regex.regex.Pattern[str]:
     if 'double_capital_letter' not in __PATTERNS:
-        __PATTERNS['double_capital_letter'] = re.compile(r"\b[A-Z]{2,}\b")
+        __PATTERNS['double_capital_letter'] = regex.compile(r"\b[A-Z]{2,}\b")
     return __PATTERNS['double_capital_letter']
 
 
-def binding_word_pattern() -> Pattern[str]:
+def binding_word_pattern() -> regex.regex.Pattern[str]:
     if 'binding_word' not in __PATTERNS:
-        __PATTERNS['binding_word'] = re.compile(fr'\b(?:{__labels()["bindingWords"]})\b|&|,')
+        __PATTERNS['binding_word'] = regex.compile(fr'\b(?:{__labels()["bindingWords"]})\b|&|,')
     return __PATTERNS['binding_word']
 
 
-def special_char_and_binding_pattern() -> Pattern[str]:
+def special_char_and_binding_pattern() -> regex.regex.Pattern[str]:
     if 'special_char_and_binding' not in __PATTERNS:
-        __PATTERNS['special_char_and_binding'] = re.compile(
+        __PATTERNS['special_char_and_binding'] = regex.compile(
             fr'[;:,.]|({__labels()["bindingWords"]})\b|&+'
         )
     return __PATTERNS['special_char_and_binding']
 
 
-def non_alphanumeric_pattern() -> Pattern[str]:
+def non_alphanumeric_pattern() -> regex.regex.Pattern[str]:
     if 'non_alphanumeric' not in __PATTERNS:
-        __PATTERNS['non_alphanumeric'] = re.compile(r"\W+")
+        __PATTERNS['non_alphanumeric'] = regex.compile(r"\W+")
     return __PATTERNS['non_alphanumeric']
 
 
-def photograph_label() -> Pattern[str]:
+def photograph_label() -> regex.regex.Pattern[str]:
     if 'photograph' not in __PATTERNS:
-        __PATTERNS['photograph'] = re.compile(fr'\b({__labels()["photo"]})\b', re.IGNORECASE)
+        __PATTERNS['photograph'] = regex.compile(fr'\b({__labels()["photo"]})\b(?i)')
     return __PATTERNS['photograph']
 
 
@@ -130,9 +128,9 @@ def find_in_pages(title: str, pages: dict[int, str], max_pages: int = 3) -> int:
 
     Optional argument to stop the search after <max_pages> pages.
     Returns page number (starts at 1) if the title is found or 0 otherwise."""
-    title_tokens = re.sub(r'\W+', ' ', title).strip()
+    title_tokens = regex.sub(r'\W+', ' ', title).strip()
     for page_number in range(min(len(pages), max_pages)):
-        page_tokens = re.sub(r'\W+', ' ', pages[page_number + 1]).strip()
+        page_tokens = regex.sub(r'\W+', ' ', pages[page_number + 1]).strip()
         if f' {title_tokens} ' in f' {page_tokens} ':
             return page_number + 1
     return 0
@@ -141,7 +139,7 @@ def find_in_pages(title: str, pages: dict[int, str], max_pages: int = 3) -> int:
 def find_isxn(identifier: str, text: str) -> Optional[ValueAndContext]:
     match = __PATTERNS[identifier].search("." + text + ".")
     if match:
-        return ValueAndContext(re.sub('–', '-', match.group(1)), text.lower())
+        return ValueAndContext(regex.sub('–', '-', match.group(1)), text.lower())
     return None
 
 
@@ -172,7 +170,7 @@ def has_no_letters(text: str) -> bool:
 
 
 def clean_whitespace(text: str) -> str:
-    return re.sub(r'\s+', ' ', text).strip()
+    return regex.sub(r'\s+', ' ', text).strip()
 
 
 def split_on_binding_word(text: str) -> list[str]:
@@ -188,4 +186,4 @@ def substitute_non_alphanumeric(text: str) -> str:
 
 
 def has_non_author_keywords(text: str) -> bool:
-    return bool(re.search(photograph_label(), text))
+    return bool(regex.search(photograph_label(), text))
