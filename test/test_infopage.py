@@ -4,7 +4,7 @@
 from metadata_extract.infopage import InfoPage
 from metadata_extract.meteor_document import MeteorDocument
 
-doc = MeteorDocument('test/resources/report2.pdf')
+doc = MeteorDocument('test/resources/report.pdf')
 infopagenr = InfoPage.find_page_number(doc.pages)
 
 
@@ -17,7 +17,7 @@ doc.close()
 
 
 def test_find_title():
-    expected_title = 'Muligheter og utfordringer for økt karbonbinding i jordbruksjord'
+    expected_title = 'Metadataekstrahering – Muligheter og innsikt'
     assert test_infopage.find_title() == expected_title
 
 
@@ -30,5 +30,5 @@ def test_find_isxn():
 
 def test_find_authors():
     authors = test_infopage.find_author()
-    assert set(authors) == {'Daniel Rasse', 'Inghild Økland', 'Teresa G. Bárcena',
-                            'Hugh Riley', 'Vegard Martinsen', 'Ievina Sturite'}
+    assert set(authors) == {'Bjørnstjerne M. Bjørnson', 'Jacobine Camilla-Collett',
+                            'Henrik J. Ibsen', 'Raymond McArthur', 'John O'}
