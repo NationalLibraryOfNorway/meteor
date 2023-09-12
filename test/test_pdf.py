@@ -5,12 +5,12 @@ from metadata_extract.meteor import Meteor
 
 
 meteor = Meteor()
-results = meteor.run('test/resources/report1.pdf')
+results = meteor.run('test/resources/report.pdf')
 
 
 def test_year():
     assert results['year'] == {
-        "value": 2021,
+        "value": 2023,
         "origin": {
             "type": "COPYRIGHT",
             "pageNumber": 4
@@ -29,17 +29,16 @@ def test_language():
 
 def test_title():
     assert results['title'] == {
-        "value": "Barnefaglig kompetanse i utlendingsforvaltningen",
+        "value": "Metadataekstrahering – Muligheter og innsikt",
         "origin": {
-            "type": "PDFINFO",
-            "pageNumber": 1
+            "type": "FRONT_PAGE"
         }
     }
 
 
 def test_publisher():
     assert results['publisher'] == {
-        "value": "Fafo",
+        "value": "Nasjonalbiblioteket",
         "origin": {
             "type": "COPYRIGHT",
             "pageNumber": 4
@@ -59,24 +58,43 @@ def test_publication_type():
 def test_authors():
     expected_dict = [
         {
-            "firstname": "Ragna",
-            "lastname": "Lillevik",
+            "firstname": "Bjørnstjerne M.",
+            "lastname": "Bjørnson",
             "origin": {
-                "type": "FRONT_PAGE"
+                "type": "INFO_PAGE",
+                "pageNumber": 2
             }
         },
         {
-            "firstname": "Lene Christin",
-            "lastname": "Holum",
+            "firstname": "Jacobine",
+            "lastname": "Camilla-Collett",
             "origin": {
-                "type": "FRONT_PAGE"
+                "type": "INFO_PAGE",
+                "pageNumber": 2
             }
         },
         {
-            "firstname": "Nerina",
-            "lastname": "Weiss",
+            "firstname": "Henrik J.",
+            "lastname": "Ibsen",
             "origin": {
-                "type": "FRONT_PAGE"
+                "type": "INFO_PAGE",
+                "pageNumber": 2
+            }
+        },
+        {
+            "firstname": "Raymond",
+            "lastname": "McArthur",
+            "origin": {
+                "type": "INFO_PAGE",
+                "pageNumber": 2
+            }
+        },
+        {
+            "firstname": "John",
+            "lastname": "O",
+            "origin": {
+                "type": "INFO_PAGE",
+                "pageNumber": 2
             }
         }
     ]
@@ -94,19 +112,19 @@ def test_authors():
 
 def test_isbn():
     assert results['isbn'] == {
-        "value": "978-82-324-0629-6",
+        "value": "978-82-17-02298-5",
         "origin": {
             "type": "PAGE",
-            "pageNumber": 4
+            "pageNumber": 2
         }
     }
 
 
 def test_issn():
     assert results['issn'] == {
-        "value": "2387-6859",
+        "value": "2464-1162",
         "origin": {
             "type": "PAGE",
-            "pageNumber": 4
+            "pageNumber": 2
         }
     }
