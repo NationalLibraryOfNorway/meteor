@@ -23,20 +23,16 @@ def __labels() -> dict[str, str]:
 
 __PATTERNS: dict[str, regex.regex.Pattern[str]] = {
     'ISSN': regex.compile(r"\D(\d{4}[–-][\dX]{4})\D"),
-    'ISBN': regex.compile(r"\D([\d–-]{13,17})\D")
+    'ISBN': regex.compile(r"\D([\d–-]{13,17})\D"),
+    'type_pattern_2': regex.compile(r'\bNOU\b'),
+    'no_letters_pattern': regex.compile(r'^[\W\d]+$'),
+    'name_pattern': regex.compile(
+        r"\b[^\P{Lu}][^\P{Ll}]*[-|‐]?[^\P{Lu}]?[^\P{Ll}’]*\.?" +
+        r"(?: [^\P{Lu}][^\P{Ll}’]*[-|‐]?[^\P{Lu}]?[^\P{Ll}]*\.?)+\b(?! *\()"),
+    'parenthesis_pattern': regex.compile(r"\(.*?\)"),
+    'double_capital_letter_pattern': regex.compile(r"\b[A-Z]{2,}\b"),
+    'non_alphanumeric_pattern': regex.compile(r"\W+")
 }
-
-
-def issn_pattern() -> regex.regex.Pattern[str]:
-    if 'ISSN' not in __PATTERNS:
-        __PATTERNS['ISSN'] = regex.compile(r"\D(\d{4}[–-][\dX]{4})\D")
-    return __PATTERNS['ISSN']
-
-
-def isbn_pattern() -> regex.regex.Pattern[str]:
-    if 'ISBN' not in __PATTERNS:
-        __PATTERNS['ISBN'] = regex.compile(r"\D([\d–-]{13,17})\D")
-    return __PATTERNS['ISBN']
 
 
 def report_pattern() -> regex.regex.Pattern[str]:
@@ -54,8 +50,6 @@ def type_pattern_1() -> regex.regex.Pattern[str]:
 
 
 def type_pattern_2() -> regex.regex.Pattern[str]:
-    if 'type_pattern_2' not in __PATTERNS:
-        __PATTERNS['type_pattern_2'] = regex.compile(r'\bNOU\b')
     return __PATTERNS['type_pattern_2']
 
 
@@ -66,9 +60,7 @@ def publisher_label() -> regex.regex.Pattern[str]:
 
 
 def no_letters_pattern() -> regex.regex.Pattern[str]:
-    if 'no_letters' not in __PATTERNS:
-        __PATTERNS['no_letters'] = regex.compile(r'^[\W\d]+$')
-    return __PATTERNS['no_letters']
+    return __PATTERNS['no_letters_pattern']
 
 
 def author_label() -> regex.regex.Pattern[str]:
@@ -78,23 +70,15 @@ def author_label() -> regex.regex.Pattern[str]:
 
 
 def name_pattern() -> regex.regex.Pattern[str]:
-    if 'name' not in __PATTERNS:
-        __PATTERNS['name'] = regex.compile(
-            r"\b[^\P{Lu}][^\P{Ll}]*[-|‐]?[^\P{Lu}]?[^\P{Ll}’]*\.?" +
-            r"(?: [^\P{Lu}][^\P{Ll}’]*[-|‐]?[^\P{Lu}]?[^\P{Ll}]*\.?)+\b(?! *\()")
-    return __PATTERNS['name']
+    return __PATTERNS['name_pattern']
 
 
 def parenthesis_pattern() -> regex.regex.Pattern[str]:
-    if 'parenthesis' not in __PATTERNS:
-        __PATTERNS['parenthesis'] = regex.compile(r"\(.*?\)")
-    return __PATTERNS['parenthesis']
+    return __PATTERNS['parenthesis_pattern']
 
 
 def double_capital_letter_pattern() -> regex.regex.Pattern[str]:
-    if 'double_capital_letter' not in __PATTERNS:
-        __PATTERNS['double_capital_letter'] = regex.compile(r"\b[A-Z]{2,}\b")
-    return __PATTERNS['double_capital_letter']
+    return __PATTERNS['double_capital_letter_pattern']
 
 
 def binding_word_pattern() -> regex.regex.Pattern[str]:
@@ -112,9 +96,7 @@ def special_char_and_binding_pattern() -> regex.regex.Pattern[str]:
 
 
 def non_alphanumeric_pattern() -> regex.regex.Pattern[str]:
-    if 'non_alphanumeric' not in __PATTERNS:
-        __PATTERNS['non_alphanumeric'] = regex.compile(r"\W+")
-    return __PATTERNS['non_alphanumeric']
+    return __PATTERNS['non_alphanumeric_pattern']
 
 
 def photograph_label() -> regex.regex.Pattern[str]:

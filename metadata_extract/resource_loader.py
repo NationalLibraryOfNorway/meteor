@@ -1,7 +1,7 @@
 # pylint: disable=missing-module-docstring
 import json
 from importlib.resources import files
-from typing import Any, Optional
+from typing import Optional
 
 
 class ResourceLoader:
@@ -17,7 +17,7 @@ class ResourceLoader:
     """
     __info_page_keywords: list[str] = []
     __stopwords: list[str] = []
-    __labels: dict[str, Any] = {}
+    __labels: dict[str, str] = {}
     __doc_type_mapping: dict[str, str] = {}
 
     @staticmethod
