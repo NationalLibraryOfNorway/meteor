@@ -41,7 +41,7 @@ class Utils:
             )
 
     @staticmethod
-    def get_languages() -> list[str] | None:
+    def get_languages() -> Optional[list[str]]:
         if not get_settings().LANGUAGES:
             return None
         return get_settings().LANGUAGES.split(',')
