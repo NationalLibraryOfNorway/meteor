@@ -1,10 +1,10 @@
 """Main module for Meteor"""
 
 
-from .resource_loader import ResourceLoader
 from typing import Optional, Callable
 import langdetect
 from langdetect.lang_detect_exception import LangDetectException
+from .resource_loader import ResourceLoader
 from .registry import PublisherRegistry
 from .meteor_document import MeteorDocument
 from .metadata import Results
