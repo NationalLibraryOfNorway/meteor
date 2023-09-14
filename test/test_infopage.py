@@ -3,8 +3,10 @@
 
 from metadata_extract.infopage import InfoPage
 from metadata_extract.meteor_document import MeteorDocument
+from metadata_extract.resource_loader import ResourceLoader
 
 doc = MeteorDocument('test/resources/report.pdf')
+ResourceLoader.load(["mul", "eng", "nob", "nno"])
 infopagenr = InfoPage.find_page_number(doc.pages)
 
 

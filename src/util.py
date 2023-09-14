@@ -23,7 +23,7 @@ class Utils:
     """Helper methods for API endpoints"""
 
     def __init__(self) -> None:
-        self.meteor = Meteor()
+        self.meteor = Meteor(languages=Utils.get_languages())
         if get_settings().REGISTRY_FILE:
             self.meteor.set_registry(
                 PublisherRegistry(registry_file=get_settings().REGISTRY_FILE)
@@ -39,6 +39,12 @@ class Utils:
                     }
                 )
             )
+
+    @staticmethod
+    def get_languages() -> Optional[list[str]]:
+        if not get_settings().LANGUAGES:
+            return None
+        return get_settings().LANGUAGES.split(',')
 
     @staticmethod
     def get_environment_prefix() -> str:

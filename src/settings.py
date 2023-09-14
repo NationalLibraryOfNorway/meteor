@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     MOUNT_FOLDER: str = ""
     MAX_FILE_SIZE_MB: int = 0
     ENVIRONMENT: str = "local"
+    LANGUAGES: str = ""
     REGISTRY_FILE: str = ""
     REGISTRY_HOST: str = ""
     REGISTRY_USER: str = ""

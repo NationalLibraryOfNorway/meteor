@@ -1,5 +1,5 @@
 {
-  "en": {
+  "eng": {
     "author": ["authors", "author(s)", "author"],
     "photo": ["photographer", "photo", "illustration"],
     "publisher": ["published by", "publisher"],
@@ -7,7 +7,7 @@
     "bindingWords": ["and"],
     "report": ["report"]
   },
-  "no": {
+  "nob": {
     "author": ["forfatter(e)", "forfattere", "forfatter", "skrevet av"],
     "photo": ["fotograf", "foto", "illustrasjon", "bilde", "fotomontasje"],
     "publisher": ["utgiver", "utgivere", "utgitt av"],
@@ -15,12 +15,12 @@
     "bindingWords": ["og"],
     "report": ["rapport"]
   },
-  "nn": {
-    "author": ["forfattar(ar)", "forfattarar", "forfattar"],
-    "photo": [],
-    "publisher": ["utgjevar", "utgjevarar"],
-    "reportType": [],
-    "bindingWords": [],
-    "report": []
+  "nno": {
+    "author": ["forfattar(ar)", "forfattarar", "forfattar", "skrive av"],
+    "photo": ["fotograf", "foto", "illustrasjon", "bilete", "fotomontasje"],
+    "publisher": ["utgjevar", "utgjevarar", "utgivar", "utgivarar", "gitt ut av"],
+    "reportType": ["årsrapport", "evaluering", "rettleiar", "undersøking"],
+    "bindingWords": ["og"],
+    "report": ["rapport"]
   }
 }

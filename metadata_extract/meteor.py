@@ -2,6 +2,8 @@
 
 
 from typing import Optional
+
+from .resource_loader import ResourceLoader
 from .registry import PublisherRegistry
 from .meteor_document import MeteorDocument
 from .metadata import Results
@@ -17,8 +19,9 @@ class Meteor:
     and return the best ones as a Results object (TypedDict, JSON-serializable)
     """
 
-    def __init__(self) -> None:
+    def __init__(self, languages: Optional[list[str]] = None) -> None:
         self.registry: Optional[PublisherRegistry] = None
+        ResourceLoader.load(languages)
 
     def set_registry(self, registry: PublisherRegistry) -> None:
         self.registry = registry
