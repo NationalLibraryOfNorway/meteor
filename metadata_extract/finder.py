@@ -220,9 +220,13 @@ class Finder:
 
     def get_language(self) -> None:
         """Detects language of concatenated text, and adds it as a candidate."""
-        lang = self.detect_language(' '.join(self.doc.pages.values()))
-        if lang:
-            self.metadata.add_candidate('language', Candidate(lang, Origin.LANGUAGE_MODEL))
+        try:
+            lang = self.detect_language(' '.join(self.doc.pages.values()))
+            if lang:
+                self.metadata.add_candidate('language', Candidate(lang, Origin.LANGUAGE_MODEL))
+        except Exception:
+            print(traceback.format_exc())
+            return
 
     def read_info_page(self) -> None:
         """Finds the infopage and searches for candidate values for title, publisher and authors."""
