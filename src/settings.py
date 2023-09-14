@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     REGISTRY_PASSWORD: str = ""
     USE_GIELLADETECT: bool = False
     GIELLADETECT_LANGS: str = ""
+    CUSTOM_PATH: str = ""
 
     class Config:
         """Specify name of settings file"""

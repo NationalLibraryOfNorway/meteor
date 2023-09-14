@@ -56,7 +56,9 @@ class Utils:
 
     @staticmethod
     def get_environment_prefix() -> str:
-        return "/meteor" if get_settings().ENVIRONMENT in ["stage", "prod"] else ""
+        if get_settings().ENVIRONMENT not in ["stage", "prod"]:
+            return ""
+        return get_settings().CUSTOM_PATH or "/meteor"
 
     @staticmethod
     def verify_file(file: UploadFile) -> None:
