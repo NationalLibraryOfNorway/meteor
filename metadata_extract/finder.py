@@ -92,6 +92,8 @@ class Finder:
             page_object = self.doc.get_page_object(number)
             isxn_values = page_object.find_isxn(identifier)
             for isxn_value in isxn_values:
+                if identifier == 'ISBN':
+                    isxn_value.value = isxn_value.value.replace('-', '')
                 candidate = Candidate(isxn_value.value, Origin.PAGE,
                                       page_nr=number, context=isxn_value.context)
                 self.metadata.add_candidate(identifier, candidate)

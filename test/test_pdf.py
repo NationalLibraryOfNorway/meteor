@@ -112,7 +112,7 @@ def test_authors():
 
 def test_isbn():
     assert results['isbn'] == {
-        "value": "978-82-17-02298-5",
+        "value": "9788217022985",
         "origin": {
             "type": "PAGE",
             "pageNumber": 2
