@@ -1,3 +1,6 @@
+"""This module provides some text extraction methods from ALTO files"""
+
+
 import xml.etree.ElementTree as ET
 from functools import reduce
 from pathlib import Path
@@ -6,12 +9,14 @@ from .models import SpanType
 
 
 class BlockType(TypedDict):
+    # pylint: disable=missing-class-docstring
     # TODO: add font and fontsize
     text: str
     bbox: list[float]
 
 
 class AltoFile:
+    """Parses and stores the text content of an ALTO file"""
 
     MAX_SPACING = 80  # Arbitrary value...
     SPACES = ['TopMargin', 'LeftMargin', 'RightMargin', 'BottomMargin', 'PrintSpace']
@@ -40,7 +45,6 @@ class AltoFile:
 
     def get_all_blocks(self) -> list[ET.Element]:
         all_blocks: list[ET.Element] = []
-        # content = self.root.find('Layout').find('Page')
         layout = self.root.find('Layout')
         if not layout:
             return all_blocks
@@ -67,19 +71,19 @@ class AltoFile:
             lines = block.findall('TextLine')
             for line in lines:
                 elements, fulltext = AltoFile.parse_line(line)
-                for el in elements:
+                for element in elements:
                     spans.append({
-                        'text': el['text'],
+                        'text': element['text'],
                         'font': 'DEFAULT_FONT',
                         'size': 10,
-                        'bbox': (el['bbox'][0], el['bbox'][1], el['bbox'][2], el['bbox'][3])
+                        'bbox': (element['bbox'][0], element['bbox'][1],
+                                 element['bbox'][2], element['bbox'][3])
                     })
                 lines_str.append(fulltext)
         return spans, '\n'.join(lines_str)
 
     @staticmethod
     def get_position(element: ET.Element) -> list[float]:
-
         """Converts positions written as string-values HPOS/VPOS/WIDTH/HEIGHT to
         float-valued bounding-box [x0,y0,x1,y1]"""
 
@@ -96,7 +100,6 @@ class AltoFile:
 
     @staticmethod
     def merge(acc: list[BlockType], word: BlockType) -> list[BlockType]:
-
         """Accumulator function: `word` block will be merged in the last item
         in `acc` list if the horizontal gap is smaller than MAX_SPACING"""
 

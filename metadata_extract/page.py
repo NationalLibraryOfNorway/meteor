@@ -44,13 +44,14 @@ class Page:
         if pdf_page:
             blocks = pdf_page.get_text("dict")['blocks']
             for block in blocks:
-                if 'lines' in block.keys():
-                    for line in block['lines']:
-                        spans = line['spans']
-                        for span in spans:
-                            if not span['text'].strip():
-                                continue
-                            self.text_blocks.append(TextBlock(span))
+                if 'lines' not in block.keys():
+                    continue
+                for line in block['lines']:
+                    spans = line['spans']
+                    for span in spans:
+                        if not span['text'].strip():
+                            continue
+                        self.text_blocks.append(TextBlock(span))
         elif alto_file:
             for span in alto_file.spans:
                 self.text_blocks.append(TextBlock(span))

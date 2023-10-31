@@ -1,3 +1,6 @@
+"""Module for storing definitions of shared dataclasses / TypedDict"""
+
+
 from typing import TypedDict
 
 
