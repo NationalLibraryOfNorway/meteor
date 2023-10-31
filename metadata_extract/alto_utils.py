@@ -4,15 +4,16 @@
 import xml.etree.ElementTree as ET
 from functools import reduce
 from pathlib import Path
-from typing import TypedDict
+from typing import Optional, TypedDict
 from .models import SpanType
 
 
 class BlockType(TypedDict):
     # pylint: disable=missing-class-docstring
-    # TODO: add font and fontsize
     text: str
     bbox: list[float]
+    font: Optional[str]
+    fontsize: Optional[float]
 
 
 class AltoFile:
@@ -20,6 +21,7 @@ class AltoFile:
 
     MAX_SPACING = 80  # Arbitrary value...
     SPACES = ['TopMargin', 'LeftMargin', 'RightMargin', 'BottomMargin', 'PrintSpace']
+    DEFAULT_STYLE = {'font': 'default', 'fontsize': '1'}
 
     def __init__(self, path: Path) -> None:
         tree = ET.parse(path)
@@ -29,7 +31,6 @@ class AltoFile:
         self.spans, self.full_text = self.parse_blocks()
 
     def get_styles(self) -> dict[str, dict[str, str]]:
-        # styles are specified for TextBlock/String (not TextLine?)
         doc_styles: dict[str, dict[str, str]] = {}
         styles_element = self.root.find('Styles')
         if not styles_element:
@@ -68,16 +69,20 @@ class AltoFile:
         lines_str = []
         spans: list[SpanType] = []
         for block in self.blocks:
+            block_style_ref = block.attrib.get('STYLEREFS')
+            block_style = self.styles[block_style_ref.split()[0]] if block_style_ref \
+                else AltoFile.DEFAULT_STYLE
             lines = block.findall('TextLine')
             for line in lines:
-                elements, fulltext = AltoFile.parse_line(line)
+                elements, fulltext = self.parse_line(line)
                 for element in elements:
                     spans.append({
                         'text': element['text'],
-                        'font': 'DEFAULT_FONT',
-                        'size': 10,
                         'bbox': (element['bbox'][0], element['bbox'][1],
-                                 element['bbox'][2], element['bbox'][3])
+                                 element['bbox'][2], element['bbox'][3]),
+                        'font': element['font'] if element['font'] else block_style['font'],
+                        'size': element['fontsize'] if element['fontsize']
+                        else float(block_style['fontsize'])
                     })
                 lines_str.append(fulltext)
         return spans, '\n'.join(lines_str)
@@ -116,14 +121,19 @@ class AltoFile:
             acc.extend([word])
         return acc
 
-    @staticmethod
-    def parse_line(line_element: ET.Element) -> tuple[list[BlockType], str]:
+    def parse_line(self, line_element: ET.Element) -> tuple[list[BlockType], str]:
         word_elements: list[BlockType] = []
         words = line_element.findall('String')
         for word in words:
+            word_style: dict[str, str] = {}
+            word_style_ref = word.attrib.get('STYLEREFS')
+            if word_style_ref:
+                word_style = self.styles[word_style_ref.split()[0]]
             word_elements.append({
                 'text': word.attrib['CONTENT'],
-                'bbox': AltoFile.get_position(word)
+                'bbox': AltoFile.get_position(word),
+                'font': word_style.get('font'),
+                'fontsize': float(word_style['fontsize']) if word_style else None
             })
         grouped_blocks: list[BlockType] = reduce(AltoFile.merge, word_elements, [])
         single_string = ' '.join([block['text'] for block in grouped_blocks])

@@ -1,4 +1,4 @@
-"""Test InfoPage methods, using a sample PDF file"""
+"""Test Page and InfoPage methods, using a sample PDF file"""
 
 
 from metadata_extract.infopage import InfoPage
@@ -14,8 +14,8 @@ def test_infopagenr():
     assert infopagenr == 2
 
 
-test_infopage = InfoPage(doc.document, infopagenr)
-doc.close()
+page_object = doc.get_page_object(infopagenr)
+test_infopage = InfoPage(page_object)
 
 
 def test_find_title():
@@ -24,9 +24,9 @@ def test_find_title():
 
 
 def test_find_isxn():
-    isbn = test_infopage.find_isxn('ISBN')
+    isbn = page_object.find_isxn('ISBN')
     assert isbn[0].value == '978-82-17-02298-5'
-    issn = test_infopage.find_isxn('ISSN')
+    issn = page_object.find_isxn('ISSN')
     assert issn[0].value == '2464-1162'
 
 
@@ -34,3 +34,6 @@ def test_find_authors():
     authors = test_infopage.find_author()
     assert set(authors) == {'Bjørnstjerne M. Bjørnson', 'Jacobine Camilla-Collett',
                             'Henrik J. Ibsen', 'Raymond McArthur', 'John O’Toole'}
+
+
+doc.close()
