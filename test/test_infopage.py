@@ -33,4 +33,4 @@ def test_find_isxn():
 def test_find_authors():
     authors = test_infopage.find_author()
     assert set(authors) == {'Bjørnstjerne M. Bjørnson', 'Jacobine Camilla-Collett',
-                            'Henrik J. Ibsen', 'Raymond McArthur', 'John O'}
+                            'Henrik J. Ibsen', 'Raymond McArthur', 'John O’Toole'}

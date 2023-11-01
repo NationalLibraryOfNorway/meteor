@@ -91,7 +91,7 @@ def test_authors():
         },
         {
             "firstname": "John",
-            "lastname": "O",
+            "lastname": "O’Toole",
             "origin": {
                 "type": "INFO_PAGE",
                 "pageNumber": 2
