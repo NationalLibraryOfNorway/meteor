@@ -27,8 +27,8 @@ __PATTERNS: dict[str, regex.regex.Pattern[str]] = {
     'type_pattern_2': regex.compile(r'\bNOU\b'),
     'no_letters_pattern': regex.compile(r'^[\W\d]+$'),
     'name_pattern': regex.compile(
-        r"\b[^\P{Lu}][^\P{Ll}]*[-|‐]?[^\P{Lu}]?[^\P{Ll}’]*\.?" +
-        r"(?: [^\P{Lu}][^\P{Ll}’]*[-|‐]?[^\P{Lu}]?[^\P{Ll}]*\.?)+\b(?! *\()"),
+        r"\b[^\P{Lu}][‘’‛′']?[^\P{Ll}]*[-|‐]?[^\P{Lu}]?[‘’‛′']?[^\P{Ll}]*\.?" +
+        r"(?: [^\P{Lu}][‘’‛′']?[^\P{Ll}]*[-|‐]?[^\P{Lu}]?[‘’‛′']?[^\P{Ll}]*\.?)+\b(?! *\()"),
     'parenthesis_pattern': regex.compile(r"\(.*?\)"),
     'double_capital_letter_pattern': regex.compile(r"\b[A-Z]{2,}\b"),
     'non_alphanumeric_pattern': regex.compile(r"\W+")
