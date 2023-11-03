@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<alto xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://schema.ccs-gmbh.com/metae/alto-1-2.xsd" xmlns:xlink="http://www.w3.org/TR/xlink">
+	<Styles>
+		<TextStyle ID="TXT_0" FONTSIZE="7" FONTFAMILY="Arial"/>
+		<TextStyle ID="TXT_2" FONTSIZE="10" FONTFAMILY="Calibri"/>
+		<TextStyle ID="TXT_3" FONTSIZE="4" FONTFAMILY="Calibri"/>
+		<TextStyle ID="TXT_4" FONTSIZE="3" FONTFAMILY="Calibri"/>
+		<TextStyle ID="TXT_5" FONTSIZE="11" FONTFAMILY="Arial"/>
+		<TextStyle ID="TXT_6" FONTSIZE="3" FONTFAMILY="Calibri"/>
+		<ParagraphStyle ID="PAR_LEFT" ALIGN="Left"/>
+	</Styles>
+	<Layout>
+		<Page ID="P1" PHYSICAL_IMG_NR="1" HEIGHT="2971" WIDTH="2099" PC="0.983">
+			<TopMargin ID="P1_TM00001" HPOS="0" VPOS="0" WIDTH="2099" HEIGHT="0"/>
+			<LeftMargin ID="P1_LM00001" HPOS="0" VPOS="0" WIDTH="0" HEIGHT="2970"/>
+			<RightMargin ID="P1_RM00001" HPOS="2098" VPOS="0" WIDTH="1" HEIGHT="2970"/>
+			<BottomMargin ID="P1_BM00001" HPOS="0" VPOS="2970" WIDTH="2099" HEIGHT="1"/>
+			<PrintSpace ID="P1_PS00001" HPOS="0" VPOS="0" WIDTH="2098" HEIGHT="2970">
+				<TextBlock ID="P1_TB00002" HPOS="371" VPOS="488" WIDTH="1354" HEIGHT="144" STYLEREFS="TXT_2 PAR_LEFT">
+					<TextLine ID="P1_TL00004" HPOS="371" VPOS="488" WIDTH="1354" HEIGHT="73">
+						<String ID="P1_ST00008" HPOS="371" VPOS="488" WIDTH="380" HEIGHT="73" CONTENT="Metadataekstrahering" WC="1.00" CC="0000000000"/>
+						<SP ID="P1_SP00007" HPOS="1207" VPOS="561" WIDTH="21"/>
+						<String ID="P1_ST00011" HPOS="1228" VPOS="519" WIDTH="42" HEIGHT="7" CONTENT="–" WC="1.00" CC="0"/>
+					</TextLine>
+					<TextLine ID="P1_TL00005" HPOS="374" VPOS="572" WIDTH="638" HEIGHT="59">
+						<String ID="P1_ST00014" HPOS="374" VPOS="572" WIDTH="303" HEIGHT="59" CONTENT="Muligheter" WC="1.00" CC="000000000"/>
+						<SP ID="P1_SP00010" HPOS="677" VPOS="631" WIDTH="32"/>
+						<String ID="P1_ST00015" HPOS="709" VPOS="572" WIDTH="303" HEIGHT="59" CONTENT="og" WC="1.00" CC="000000000"/>
+						<SP ID="P1_SP00011" HPOS="677" VPOS="631" WIDTH="32"/>
+						<String ID="P1_ST00016" HPOS="709" VPOS="572" WIDTH="303" HEIGHT="59" CONTENT="innsikt" WC="1.00" CC="000000000"/>
+					</TextLine>
+				</TextBlock>
+				<TextBlock ID="P1_TB00003" HPOS="371" VPOS="488" WIDTH="1354" HEIGHT="144" STYLEREFS="TXT_0 PAR_LEFT">
+					<TextLine ID="P1_TL000012" HPOS="371" VPOS="488" WIDTH="1354" HEIGHT="73">
+						<String ID="P1_ST00017" HPOS="371" VPOS="488" WIDTH="380" HEIGHT="73" CONTENT="Evaluering" WC="1.00" CC="0000000000"/>
+					</TextLine>
+				</TextBlock>
+				<TextBlock ID="P1_TB00004" HPOS="371" VPOS="686" WIDTH="725" HEIGHT="48" STYLEREFS="TXT_3 PAR_LEFT">
+					<TextLine ID="P1_TL00007" HPOS="371" VPOS="686" WIDTH="725" HEIGHT="48">
+						<String ID="P1_ST00022" HPOS="371" VPOS="686" WIDTH="296" HEIGHT="48" CONTENT="METEOR" WC="1.00" CC="000000000000"/>
+						<SP ID="P1_SP00016" HPOS="667" VPOS="734" WIDTH="14"/>
+						<String ID="P1_ST00023" HPOS="681" VPOS="686" WIDTH="67" HEIGHT="37" CONTENT="RAPPORT" WC="1.00" CC="000"/>
+						<SP ID="P1_SP00017" HPOS="748" VPOS="734" WIDTH="14"/>
+						<String ID="P1_ST00024" HPOS="762" VPOS="688" WIDTH="35" HEIGHT="35" CONTENT="VOL. 1" WC="1.00" CC="00"/>
+						<SP ID="P1_SP00018" HPOS="797" VPOS="734" WIDTH="21"/>
+						<String ID="P1_ST00025" HPOS="818" VPOS="686" WIDTH="149" HEIGHT="37" CONTENT="NR. 42" WC="1.00" CC="0000000"/>
+						<SP ID="P1_SP00019" HPOS="967" VPOS="734" WIDTH="21"/>
+						<String ID="P1_ST00026" HPOS="988" VPOS="688" WIDTH="108" HEIGHT="35" CONTENT="2023" WC="1.00" CC="0000"/>
+					</TextLine>
+				</TextBlock>
+				<TextBlock ID="P1_TB00005" HPOS="371" VPOS="2769" WIDTH="261" HEIGHT="34" STYLEREFS="TXT_4 PAR_LEFT">
+					<TextLine ID="P1_TL00008" HPOS="371" VPOS="2769" WIDTH="260" HEIGHT="32">
+						<String ID="P1_ST00027" HPOS="371" VPOS="2769" WIDTH="123" HEIGHT="25" CONTENT="Bjørnstjerne" WC="1.00" CC="000000"/>
+						<SP ID="P1_SP00020" HPOS="494" VPOS="2794" WIDTH="14"/>
+						<String ID="P1_ST00028" HPOS="508" VPOS="2769" WIDTH="123" HEIGHT="32" CONTENT="M." WC="1.00" CC="000000"/>
+						<SP ID="P1_SP00021" HPOS="494" VPOS="2794" WIDTH="14"/>
+						<String ID="P1_ST00029" HPOS="508" VPOS="2769" WIDTH="123" HEIGHT="32" CONTENT="Bjørnson" WC="1.00" CC="000000"/>
+					</TextLine>
+					<TextLine ID="P1_TL00009" HPOS="371" VPOS="2769" WIDTH="260" HEIGHT="32">
+						<String ID="P1_ST00030" HPOS="371" VPOS="2769" WIDTH="123" HEIGHT="25" CONTENT="Jacobine" WC="1.00" CC="000000"/>
+						<SP ID="P1_SP00022" HPOS="494" VPOS="2794" WIDTH="14"/>
+						<String ID="P1_ST00031" HPOS="508" VPOS="2769" WIDTH="123" HEIGHT="32" CONTENT="Camilla-Collett" WC="1.00" CC="000000"/>
+					</TextLine>
+					<TextLine ID="P1_TL00010" HPOS="371" VPOS="2769" WIDTH="260" HEIGHT="32">
+						<String ID="P1_ST00032" HPOS="371" VPOS="2769" WIDTH="123" HEIGHT="25" CONTENT="Henrik" WC="1.00" CC="000000"/>
+						<SP ID="P1_SP00023" HPOS="494" VPOS="2794" WIDTH="14"/>
+						<String ID="P1_ST00033" HPOS="371" VPOS="2769" WIDTH="123" HEIGHT="25" CONTENT="J." WC="1.00" CC="000000"/>
+						<SP ID="P1_SP00024" HPOS="494" VPOS="2794" WIDTH="14"/>
+						<String ID="P1_ST00034" HPOS="508" VPOS="2769" WIDTH="123" HEIGHT="32" CONTENT="Ibsen" WC="1.00" CC="000000"/>
+					</TextLine>
+					<TextLine ID="P1_TL00011" HPOS="371" VPOS="2769" WIDTH="260" HEIGHT="32">
+						<String ID="P1_ST00035" HPOS="371" VPOS="2769" WIDTH="123" HEIGHT="25" CONTENT="Raymond" WC="1.00" CC="000000"/>
+						<SP ID="P1_SP00025" HPOS="494" VPOS="2794" WIDTH="14"/>
+						<String ID="P1_ST00036" HPOS="508" VPOS="2769" WIDTH="123" HEIGHT="32" CONTENT="McArthur" WC="1.00" CC="000000"/>
+					</TextLine>
+				</TextBlock>
+				<ComposedBlock ID="P1_CB00001" HPOS="58" VPOS="959" WIDTH="1999" HEIGHT="1705" STYLEREFS="TXT_5 PAR_LEFT" TYPE="Illustration">
+					<GraphicalElement ID="P1_CB00001_SUB" HPOS="58" VPOS="959" WIDTH="1999" HEIGHT="1705"/>
+				</ComposedBlock>
+			</PrintSpace>
+		</Page>
+	</Layout>
+</alto>
