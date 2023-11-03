@@ -1,4 +1,6 @@
-"""Test the output from Meteor.run on a sample PDF file"""
+# pylint: disable=R0801
+
+"""Test the output from Meteor.run on sample Alto files"""
 
 
 from metadata_extract.meteor import Meteor
