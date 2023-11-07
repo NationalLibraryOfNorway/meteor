@@ -1,6 +1,7 @@
-# METEOR - Metadata extraction from PDF reports
+# METEOR - Metadata extraction from public reports
 
-A web service to extract metadata from a digital-native PDF report.
+A web service to extract metadata from a public reports.
+Input can be either a PDF with a text layer, or a directory containing ALTO XML files.
 
 ### Start the program
 
