@@ -48,22 +48,14 @@ class Finder:
 
     def find_report_prefix(self) -> None:
         """Looks in all pages for mention of publisher in the format <name>-report."""
-        for pagenumber in self.doc.pages:
-            page = self.doc.document.load_page(pagenumber - 1)
-            blocks = page.get_text("blocks")
-            for block in blocks:
-                if block[-1] == 1:  # image block
-                    continue
-                line = block[4].split('\n')[0].strip()  # only use first line of block
-                if text.has_no_letters(line) or len(line) == 1:
-                    continue
-                if self.metadata.has_publisher(line):
-                    continue
-                report_prefix = text.find_report_prefix(line)
+        for page_number in self.doc.pages:
+            page = self.doc.get_page_object(page_number)
+            for line in page.text_blocks:
+                report_prefix = text.find_report_prefix(line.text)
                 if report_prefix:
                     if self.metadata.has_publisher(report_prefix):
                         continue
-                    publisher = Candidate(report_prefix, Origin.RAPPORT_PREFIX, page_nr=pagenumber)
+                    publisher = Candidate(report_prefix, Origin.RAPPORT_PREFIX, page_nr=page_number)
                     publisher.reg_entries = self.search_in_registry(report_prefix)
                     self.metadata.add_candidate('publisher', publisher)
 
@@ -178,6 +170,8 @@ class Finder:
     def get_title_from_info(self) -> None:
         """If the title value in PDF info is also found in the document's text (allowing for
         small edits), adds it as a title candidate."""
+        if not self.doc.pdfinfo:
+            return
         if self.doc.pdfinfo['title']:
             title = self.doc.pdfinfo['title']
             found_on_page = text.find_in_pages(title, self.doc.pages)
@@ -190,6 +184,8 @@ class Finder:
         """If the author value in PDF info is also found in the document's text (allowing for
         small edits), adds it as an author candidate."""
         # TODO: Seems to only fetch first author before comma from pdfinfo
+        if not self.doc.pdfinfo:
+            return
         if self.doc.pdfinfo['author']:
             author = self.doc.pdfinfo['author']
             name_match = text.name_pattern().findall(author)
@@ -204,6 +200,8 @@ class Finder:
 
     def get_year_from_info(self) -> None:
         """Adds the PDF info modDate, or creationDate, as a candidate if it can be found in text."""
+        if not self.doc.pdfinfo:
+            return
         year = None
         if self.doc.pdfinfo['modDate']:
             year = parse(self.doc.pdfinfo['modDate'][2:14]).year
@@ -235,7 +233,7 @@ class Finder:
         infopagenr = InfoPage.find_page_number(self.doc.pages)
         if not infopagenr:
             return
-        infopage = InfoPage(self.doc.document, infopagenr)
+        infopage = InfoPage(self.doc.get_page_object(infopagenr))
         title = infopage.find_title()
         if title:
             candidate = Candidate(title, Origin.INFO_PAGE, page_nr=infopagenr)

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<alto xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://schema.ccs-gmbh.com/metae/alto-1-2.xsd" xmlns:xlink="http://www.w3.org/TR/xlink">
+	<Styles>
+		<TextStyle ID="TXT_0" FONTSIZE="3" FONTFAMILY="ArialNarrow"/>
+		<TextStyle ID="TXT_1" FONTSIZE="3" FONTFAMILY="Cambria"/>
+		<TextStyle ID="TXT_2" FONTSIZE="3" FONTFAMILY="Cambria-Bold" FONTSTYLE="bold"/>
+		<TextStyle ID="TXT_3" FONTSIZE="3" FONTFAMILY="Cambria"/>
+		<TextStyle ID="TXT_4" FONTSIZE="3" FONTFAMILY="Cambria-Bold"/>
+		<ParagraphStyle ID="PAR_LEFT" ALIGN="Left"/>
+		<ParagraphStyle ID="PAR_RIGHT" ALIGN="Right"/>
+	</Styles>
+	<Layout>
+		<Page ID="P2" PHYSICAL_IMG_NR="2" HEIGHT="2971" WIDTH="2100" PRINTED_IMG_NR="2" PC="1.000">
+			<TopMargin ID="P2_TM00001" HPOS="0" VPOS="0" WIDTH="2100" HEIGHT="408"/>
+			<LeftMargin ID="P2_LM00001" HPOS="0" VPOS="408" WIDTH="288" HEIGHT="2398"/>
+			<RightMargin ID="P2_RM00001" HPOS="1847" VPOS="408" WIDTH="253" HEIGHT="2398"/>
+			<BottomMargin ID="P2_BM00001" HPOS="0" VPOS="2806" WIDTH="2100" HEIGHT="165"/>
+			<PrintSpace ID="P2_PS00001" HPOS="288" VPOS="408" WIDTH="1560" HEIGHT="2398">
+				<TextBlock ID="P2_TB00003" HPOS="520" VPOS="516" WIDTH="1315" HEIGHT="145" STYLEREFS="TXT_1 PAR_LEFT">
+					<TextLine ID="P2_TL00005" HPOS="520" VPOS="516" WIDTH="94" HEIGHT="27">
+						<String ID="P2_ST00008" HPOS="520" VPOS="516" WIDTH="94" HEIGHT="27" CONTENT="Tittel" WC="1.00" CC="000000" STYLEREFS="TXT_2"/>
+					</TextLine>
+					<TextLine ID="P2_TL00006" HPOS="656" VPOS="516" WIDTH="1178" HEIGHT="34">
+						<String ID="P2_ST00009" HPOS="656" VPOS="516" WIDTH="131" HEIGHT="27" CONTENT="Metadataekstrahering" WC="1.00" CC="00000000"/>
+						<SP ID="P2_SP00004" HPOS="787" VPOS="543" WIDTH="10"/>
+						<String ID="P2_ST00010" HPOS="797" VPOS="526" WIDTH="36" HEIGHT="17" CONTENT="–" WC="1.00" CC="00"/>
+						<SP ID="P2_SP00005" HPOS="833" VPOS="543" WIDTH="10"/>
+						<String ID="P2_ST00011" HPOS="843" VPOS="526" WIDTH="39" HEIGHT="24" CONTENT="Muligheter" WC="1.00" CC="00"/>
+						<SP ID="P2_SP00006" HPOS="882" VPOS="550" WIDTH="11"/>
+						<String ID="P2_ST00012" HPOS="893" VPOS="516" WIDTH="165" HEIGHT="34" CONTENT="og" WC="1.00" CC="0000000000"/>
+						<SP ID="P2_SP00007" HPOS="1058" VPOS="550" WIDTH="11"/>
+						<String ID="P2_ST00013" HPOS="1069" VPOS="516" WIDTH="70" HEIGHT="27" CONTENT="innsikt" WC="1.00" CC="000"/>
+					</TextLine>
+				</TextBlock>
+				<TextBlock ID="P2_TB00007" HPOS="533" VPOS="1172" WIDTH="420" HEIGHT="28" STYLEREFS="TXT_3 PAR_LEFT">
+					<TextLine ID="P2_TL00019" HPOS="533" VPOS="1172" WIDTH="81" HEIGHT="27">
+						<String ID="P2_ST00081" HPOS="533" VPOS="1172" WIDTH="81" HEIGHT="27" CONTENT="ISBN" WC="1.00" CC="0000" STYLEREFS="TXT_2"/>
+					</TextLine>
+					<TextLine ID="P2_TL00020" HPOS="656" VPOS="1172" WIDTH="297" HEIGHT="24">
+						<String ID="P2_ST00082" HPOS="656" VPOS="1172" WIDTH="297" HEIGHT="24" CONTENT="978-82-17-02298-5" WC="1.00" CC="00000000000000000"/>
+					</TextLine>
+				</TextBlock>
+				<TextBlock ID="P2_TB00008" HPOS="533" VPOS="1272" WIDTH="420" HEIGHT="28" STYLEREFS="TXT_3 PAR_LEFT">
+					<TextLine ID="P2_TL00021" HPOS="533" VPOS="1172" WIDTH="81" HEIGHT="27">
+						<String ID="P2_ST00083" HPOS="533" VPOS="1272" WIDTH="81" HEIGHT="27" CONTENT="ISSN" WC="1.00" CC="0000" STYLEREFS="TXT_2"/>
+					</TextLine>
+					<TextLine ID="P2_TL00022" HPOS="656" VPOS="1172" WIDTH="297" HEIGHT="24">
+						<String ID="P2_ST00084" HPOS="656" VPOS="1272" WIDTH="297" HEIGHT="24" CONTENT="2464-1162" WC="1.00" CC="00000000000000000"/>
+					</TextLine>
+				</TextBlock>
+				<TextBlock ID="P2_TB00009" HPOS="533" VPOS="1172" WIDTH="420" HEIGHT="28" STYLEREFS="TXT_3 PAR_LEFT">
+					<TextLine ID="P2_TL00023" HPOS="656" VPOS="516" WIDTH="1178" HEIGHT="34">
+						<String ID="P2_ST00085" HPOS="656" VPOS="516" WIDTH="131" HEIGHT="27" CONTENT="©" WC="1.00" CC="00000000"/>
+						<SP ID="P2_SP00008" HPOS="787" VPOS="543" WIDTH="10"/>
+						<String ID="P2_ST00086" HPOS="797" VPOS="526" WIDTH="36" HEIGHT="17" CONTENT="Nasjonalbiblioteket," WC="1.00" CC="00"/>
+						<SP ID="P2_SP00009" HPOS="833" VPOS="543" WIDTH="10"/>
+						<String ID="P2_ST00087" HPOS="843" VPOS="526" WIDTH="39" HEIGHT="24" CONTENT="2023" WC="1.00" CC="00"/>
+					</TextLine>
+				</TextBlock>
+			</PrintSpace>
+		</Page>
+	</Layout>
+</alto>

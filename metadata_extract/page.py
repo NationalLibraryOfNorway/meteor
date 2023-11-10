@@ -1,18 +1,12 @@
 """This module deals with pages, defined as sets of text elements."""
 
 
-from typing import Callable, Optional, Tuple, TypedDict
-from fitz import Document
+from typing import Callable, Optional
+import fitz
 from . import text
 from .text import ValueAndContext
-
-
-class SpanType(TypedDict):
-    """Spans are a structure returned by fitz/MuPDF"""
-    text: str
-    font: str
-    size: float
-    bbox: tuple[float, float, float, float]
+from .alto_utils import AltoFile
+from .models import SpanType
 
 
 class TextBlock:
@@ -30,8 +24,8 @@ class TextBlock:
 
     def __str__(self) -> str:
         return f"[{self.bbox[0]:.2f}, {self.bbox[1]:.2f}, " + \
-            "{self.bbox[2]:.2f}, {self.bbox[3]:.2f}] " + \
-            "{self.font} {self.fontsize:.2f} [{self.flags}]\t[{self.text}]"
+            f"{self.bbox[2]:.2f}, {self.bbox[3]:.2f}] " + \
+            f"{self.font} {self.fontsize:.2f} [{self.flags}]\t[{self.text}]"
 
 
 class Page:
@@ -43,23 +37,31 @@ class Page:
     """
 
     # TODO: preserve full blocks instead of single lines?
-    def __init__(self, doc: Document, page_number: int):
+    def __init__(self,
+                 pdf_page: Optional[fitz.Page] = None,
+                 alto_file: Optional[AltoFile] = None):
         self.text_blocks = []
-        doc_page = doc.load_page(page_number - 1)
-        blocks = doc_page.get_text("dict")['blocks']
-        for block in blocks:
-            if 'lines' in block.keys():
+        if pdf_page:
+            blocks = pdf_page.get_text("dict")['blocks']
+            for block in blocks:
+                if 'lines' not in block.keys():
+                    continue
                 for line in block['lines']:
                     spans = line['spans']
                     for span in spans:
                         if not span['text'].strip():
                             continue
                         self.text_blocks.append(TextBlock(span))
+        elif alto_file:
+            for span in alto_file.spans:
+                self.text_blocks.append(TextBlock(span))
+        else:
+            raise ValueError("No input file provided!")
 
     def get_line_and_column(self, block: TextBlock,
                             slack_x: float = 5., slack_y: float = 5.,
                             require_letters: bool = False
-                            ) -> Tuple[list[TextBlock], list[TextBlock]]:
+                            ) -> tuple[list[TextBlock], list[TextBlock]]:
         """Returns lists of blocks horizontally and vertically aligned with given block
 
         Given a block, this method returns 2 lists of blocks that are on the same line
@@ -76,11 +78,13 @@ class Page:
                           if abs(b.bbox[1] - block.bbox[1]) < slack_y
                           and b.bbox[0] > block.bbox[0]
                           and has_letters(b.text)]
+        blocks_on_line.sort(key=lambda b: b.bbox[0])
 
         blocks_on_column = [b for b in self.text_blocks
                             if abs(b.bbox[0] - block.bbox[0]) < slack_x
                             and b.bbox[1] > block.bbox[1]
                             and has_letters(b.text)]
+        blocks_on_column.sort(key=lambda b: b.bbox[1])
 
         return (blocks_on_line, blocks_on_column)
 
@@ -90,7 +94,6 @@ class Page:
         """Returns text content of block's nearest neighbour on which `transform`
         method yields a truth value.
         """
-
         (blocks_on_line, blocks_on_column) = self.get_line_and_column(block)
 
         if blocks_on_line:

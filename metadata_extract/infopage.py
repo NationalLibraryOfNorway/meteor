@@ -2,8 +2,6 @@
 
 
 from typing import Optional, TypedDict
-from fitz import Document
-
 from . import text
 from .author_name import get_author_names
 from .resource_loader import ResourceLoader
@@ -16,7 +14,7 @@ class BlockAndScore(TypedDict):
     score: int
 
 
-class InfoPage(Page):
+class InfoPage:
     """Extends a Page by attempting to classify text blocks as labels or values.
 
     Information pages in reports often contain a page formatted as a list or a table
@@ -55,14 +53,14 @@ class InfoPage(Page):
                 return True
         return False
 
-    def __init__(self, doc: Document, pagenr: int):
-        super().__init__(doc, pagenr)
+    def __init__(self, page_object: Page) -> None:
 
+        self.page = page_object
         self.keyword_font = self.group_by_font()
         self.upper_attr = False
         self.colon_attr = False
 
-        for block in self.text_blocks:
+        for block in self.page.text_blocks:
             if block.text.isupper():
                 block.flags |= InfoPage.UPPERCASE
             if block.text.rstrip().endswith(':'):
@@ -80,9 +78,9 @@ class InfoPage(Page):
 
         candidates: list[BlockAndScore] = []
 
-        (blocks_on_line, blocks_on_column) = super().get_line_and_column(block, slack_x=slack_x,
-                                                                         slack_y=slack_y,
-                                                                         require_letters=True)
+        (blocks_on_line, blocks_on_column) = self.page.get_line_and_column(block, slack_x=slack_x,
+                                                                           slack_y=slack_y,
+                                                                           require_letters=True)
         if blocks_on_line:
             candidates.append({'block': min(blocks_on_line, key=lambda b: b.bbox[0]),
                                'score': 0})
@@ -114,7 +112,7 @@ class InfoPage(Page):
 
     def find_title(self) -> Optional[str]:
         title_block = None
-        for block in self.text_blocks:
+        for block in self.page.text_blocks:
             if 'title' in block.text.lower() or 'tittel' in block.text.lower():
                 title_block = block
                 break
@@ -124,7 +122,7 @@ class InfoPage(Page):
         return None
 
     def find_publisher(self) -> Optional[str]:
-        publisher_block = super().find_publisher_block()
+        publisher_block = self.page.find_publisher_block()
         if publisher_block:
             publisher = self.get_value_neighbour(publisher_block)
             return publisher
@@ -132,7 +130,7 @@ class InfoPage(Page):
 
     def find_author(self) -> Optional[list[str]]:
         author_block = None
-        for block in self.text_blocks:
+        for block in self.page.text_blocks:
             if text.author_label().match(block.text.lower()):
                 author_block = block
                 break
@@ -144,10 +142,10 @@ class InfoPage(Page):
 
     def group_by_font(self) -> Optional[str]:
         """Heuristic checking if a specific font is used for label blocks."""
-        fonts = {b.font for b in self.text_blocks}
+        fonts = {b.font for b in self.page.text_blocks}
         block_by_font = {}
         for font in fonts:
-            block_by_font[font] = [b for b in self.text_blocks if b.font == font]
+            block_by_font[font] = [b for b in self.page.text_blocks if b.font == font]
         proportions = {}
         for font, blocks in block_by_font.items():
             subset = [b for b in blocks if b.flags & InfoPage.HASKEYWORD]
@@ -163,13 +161,13 @@ class InfoPage(Page):
         Based on a keyword list and formal attributes commonly used for labels (uppercase,
         ends with colon), this method computes ratios to check whether such formatting is used.
         """
-        colon_block = [b for b in self.text_blocks if b.flags & InfoPage.ENDSWITHCOLON]
+        colon_block = [b for b in self.page.text_blocks if b.flags & InfoPage.ENDSWITHCOLON]
         if colon_block:
             colon_keywords = [b for b in colon_block if b.flags & InfoPage.HASKEYWORD]
             ratio_keywords_colon = len(colon_keywords) / float(len(colon_block))
             self.colon_attr = len(colon_block) > 0 and ratio_keywords_colon > 0.5
 
-        upper_block = [b for b in self.text_blocks if b.flags & InfoPage.UPPERCASE and
+        upper_block = [b for b in self.page.text_blocks if b.flags & InfoPage.UPPERCASE and
                        not ('ISBN' in b.text or 'ISSN' in b.text)]
         if upper_block:
             upper_keywords = [b for b in upper_block if b.flags & InfoPage.HASKEYWORD]
