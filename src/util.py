@@ -45,7 +45,7 @@ class Utils:
             if get_settings().GIELLADETECT_LANGS:
                 langs = get_settings().GIELLADETECT_LANGS.split(',')
             self.meteor.set_language_detection_method(
-                lambda t: gielladetect.detect(t, langs=langs)  # type: ignore
+                lambda t: gielladetect.detect(t, langs=langs)
             )
 
     @staticmethod
