@@ -3,6 +3,7 @@
 
 from functools import lru_cache
 
+from pydantic import Extra
 from pydantic_settings import BaseSettings
 
 
@@ -23,11 +24,11 @@ class Settings(BaseSettings):
     USE_GIELLADETECT: bool = False
     GIELLADETECT_LANGS: str = ""
     CUSTOM_PATH: str = ""
-    DIFF_FILES_FOLDER: str = ""
 
     class Config:
         """Specify name of settings file"""
         env_file = '.env'
+        extra = Extra.allow
 
 
 settings = Settings()
