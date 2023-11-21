@@ -2,13 +2,14 @@
 
 
 from functools import lru_cache
-
-from pydantic import Extra
+from pydantic import ConfigDict
 from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
     """Loads settings from .env file"""
+    model_config = ConfigDict(extra='allow')
+
     UPLOAD_FOLDER: str = 'static'
 
     # Should be defined in a .env file
@@ -25,13 +26,8 @@ class Settings(BaseSettings):
     GIELLADETECT_LANGS: str = ""
     CUSTOM_PATH: str = ""
 
-    class Config:
-        """Specify name of settings file"""
-        env_file = '.env'
-        extra = Extra.allow
 
-
-settings = Settings()
+settings = Settings(_env_file='.env')
 
 
 @lru_cache()
