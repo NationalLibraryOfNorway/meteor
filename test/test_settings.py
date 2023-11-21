@@ -4,8 +4,8 @@ from src.settings import Settings
 
 
 def test_config():
-    settings = Settings(_env_file='.env.example')
     """Test that settings are loaded correctly"""
+    settings = Settings(_env_file='.env.example')
     assert settings.MOUNT_FOLDER == "/tmp/pdf_dir"
     assert settings.MAX_FILE_SIZE_MB == 123
     assert settings.ENVIRONMENT == "local"

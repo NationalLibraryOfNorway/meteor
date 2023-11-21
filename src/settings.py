@@ -2,13 +2,13 @@
 
 
 from functools import lru_cache
-from pydantic import ConfigDict
-from pydantic_settings import BaseSettings
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     """Loads settings from .env file"""
-    model_config = ConfigDict(extra='allow')
+    model_config = SettingsConfigDict(extra='allow', env_file='.env')
 
     UPLOAD_FOLDER: str = 'static'
 
@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     CUSTOM_PATH: str = ""
 
 
-settings = Settings(_env_file='.env')
+settings = Settings()
 
 
 @lru_cache()
