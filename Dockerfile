@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM python:3.11.1-slim-buster
+FROM python:3.11.6-slim-bookworm
 
 ARG USE_GIELLA=false
 
