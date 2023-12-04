@@ -58,7 +58,7 @@ class PublisherRegistry:
             "SELECT DISTINCT O1.id, O2.name FROM " +
             "organizations O1 JOIN organizations O2 USING(id) " +
             f"WHERE {self.field} = '{escaped_pattern}' AND " +
-            "O2.standard=1 ORDER BY O1.standard DESC, O1.category DESC"
+            "O2.standard=1 ORDER BY O1.outdated, O1.standard DESC, O1.category DESC"
         )
         rows = self.cursor.fetchall()
         results: list[RegistryType] = []

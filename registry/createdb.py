@@ -2,7 +2,35 @@ from bs4 import BeautifulSoup
 import glob
 import sqlite3
 import mysql.connector
+import re
 from decouple import config
+
+
+def text_outdated(date_field):
+    pattern = re.sub(r'\d', 'Y', date_field)
+    for p in ['til', 't.o.m', 'perioden', 'YYYY-YYYY']:
+        pos = pattern.find(p)
+        if pos == -1:
+            continue
+        pos_fra = pattern.find('fra', pos)
+        if pos_fra > 0:
+            return False
+        return True
+    return False
+
+
+def record_is_outdated(record):
+    date_678 = record.find('marc:datafield', {'tag': '678'})
+    if date_678:
+        sub_text = date_678.find_all('marc:subfield', {'code': 'a'})
+        if sub_text and text_outdated(sub_text[0].next):
+            return 1
+    date_680 = record.find('marc:datafield', {'tag': '680'})
+    if date_680:
+        sub_text = date_680.find_all('marc:subfield', {'code': 'a'})
+        if sub_text and text_outdated(sub_text[0].next):
+            return 1
+    return 0
 
 
 def formatName(nametag, filename, record_id):
@@ -54,13 +82,16 @@ def process_record(marcrecord, filename):
         formattedName = formatName(variant, filename, recordId)
         if not formattedName:
             continue
+        if formattedName == name or formattedName in variants:
+            continue
         variants.append(formattedName)
 
     return {
         'id': recordId,
         'name': name,
         'variants': variants,
-        'category': int(kat[-1])
+        'category': kat[-1],
+        'outdated': record_is_outdated(marcrecord)
     }
 
 
@@ -85,11 +116,11 @@ db_user = config("REGISTRY_USER", None)
 db_database = config("REGISTRY_DATABASE", None)
 db_password = config("REGISTRY_PASSWORD", None)
 
-table_schema = "id LONG, name TEXT, standard TINYINT, category TINYINT"
+table_schema = "id LONG, name TEXT, standard TINYINT, category TINYINT, outdated TINYINT"
 if sqlite_file:
     connection = sqlite3.connect(sqlite_file, isolation_level=None)
     name_index = "LOWER(name)"
-    values = "?,?,?,?"
+    values = "?,?,?,?,?"
 else:
     connection = mysql.connector.connect(host=db_host,
                                          user=db_user,
@@ -98,7 +129,7 @@ else:
                                          autocommit=True)
     table_schema += ", lower_name TEXT GENERATED ALWAYS AS (LOWER(name)) PERSISTENT"
     name_index = "lower_name"
-    values = "%s,%s,%s,%s,default"
+    values = "%s,%s,%s,%s,%s,default"
 
 cursor = connection.cursor()
 
@@ -119,17 +150,17 @@ for filename in files:
     entries = process_file(filename)
     new_values = []
     for e in entries:
-        new_values.append([int(e['id']), str(e['name']), 1, str(e['category'])])
+        new_values.append([int(e['id']), str(e['name']), 1, e['category'], str(e['outdated'])])
         for v in e['variants']:
-            new_values.append([int(e['id']), str(v), 0, str(e['category'])])
+            new_values.append([int(e['id']), str(v), 0, e['category'], str(e['outdated'])])
     cursor.executemany(query, new_values)
     print(f"File {filename} added")
 
 print("All files added!")
 
 cursor.execute("DELETE FROM organizations")
-cursor.execute("INSERT INTO organizations(id, name, standard, category) " +
-               "SELECT id, name, standard, category FROM organizations_new")
+cursor.execute("INSERT INTO organizations(id, name, standard, category, outdated) " +
+               "SELECT id, name, standard, category, outdated FROM organizations_new")
 cursor.execute("DROP TABLE organizations_new")
 
 cursor.close()
