@@ -42,8 +42,9 @@ class Page:
                  alto_file: Optional[AltoFile] = None):
         self.text_blocks = []
         if pdf_page:
-            blocks = pdf_page.get_text("dict")['blocks']
-            for block in blocks:
+            page_text = pdf_page.get_text("dict",
+                                          flags=fitz.TEXTFLAGS_DICT & ~fitz.TEXT_PRESERVE_IMAGES)
+            for block in page_text["blocks"]:
                 if 'lines' not in block.keys():
                     continue
                 for line in block['lines']:
