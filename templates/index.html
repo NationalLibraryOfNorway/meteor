@@ -46,7 +46,7 @@
           {% if field == 'publisher' %}
           <tr>
             <td>{{ field }}</td>
-            <td>{{ results[field].valueInDoc }}</td>
+            <td>{{ results[field].valueInDoc or results[field].value }}</td>
             <td>{{ results[field].origin }}</td>
             <td>{% if results[field].authId %}
               <a href="https://bibsys-almaprimo.hosted.exlibrisgroup.com/permalink/f/nelpa2/AUTREG{{results[field].authId}}"
