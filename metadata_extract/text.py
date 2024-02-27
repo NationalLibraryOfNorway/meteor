@@ -175,14 +175,8 @@ def score_isxn_context(context: Optional[str]) -> int:
     if not context:
         return 0
     score = 0
-    for word in ['digital', 'pdf', 'elektroni', 'net', 'web']:
-        if word in context:
-            score += 1
-    if regex.search(r'\be\b', context):
-        score += 1
-    for word in ['paper', 'papir', 'tryk']:
-        if word in context:
-            score -= 1
-    if regex.search(r'\bp\b', context):
-        score -= 1
+    e_matches = regex.findall(fr'{__labels()["e_isxn"]}|\be\b', context)
+    score += len(e_matches)
+    p_matches = regex.findall(fr'{__labels()["p_isxn"]}|\bp\b', context)
+    score -= len(p_matches)
     return score

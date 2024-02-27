@@ -5,7 +5,9 @@
     "publisher": ["published by", "publisher"],
     "reportType": ["annual report", "evaluation", "guidance", "survey"],
     "bindingWords": ["and"],
-    "report": ["report"]
+    "report": ["report"],
+    "e_isxn": ["digital", "pdf", "web"],
+    "p_isxn": ["paper", "print"]
   },
   "nob": {
     "author": ["forfatter(e)", "forfattere", "forfatter", "skrevet av"],
@@ -13,7 +15,9 @@
     "publisher": ["utgiver", "utgivere", "utgitt av"],
     "reportType": ["årsrapport", "evaluering", "veileder", "undersøkelse"],
     "bindingWords": ["og"],
-    "report": ["rapport"]
+    "report": ["rapport"],
+    "e_isxn": ["digital", "pdf", "elektroni", "net", "web"],
+    "p_isxn": ["papir", "tryk"]
   },
   "nno": {
     "author": ["forfattar(ar)", "forfattarar", "forfattar", "skrive av"],
@@ -21,6 +25,8 @@
     "publisher": ["utgjevar", "utgjevarar", "utgivar", "utgivarar", "gitt ut av"],
     "reportType": ["årsrapport", "evaluering", "rettleiar", "undersøking"],
     "bindingWords": ["og"],
-    "report": ["rapport"]
+    "report": ["rapport"],
+    "e_isxn": ["digital", "pdf", "elektroni", "net", "web"],
+    "p_isxn": ["papir", "tryk"]
   }
 }
