@@ -169,3 +169,20 @@ def substitute_non_alphanumeric(text: str) -> str:
 
 def has_non_author_keywords(text: str) -> bool:
     return bool(regex.search(photograph_label(), text))
+
+
+def score_isxn_context(context: Optional[str]) -> int:
+    if not context:
+        return 0
+    score = 0
+    for word in ['digital', 'pdf', 'elektroni', 'net', 'web']:
+        if word in context:
+            score += 1
+    if regex.search(r'\be\b', context):
+        score += 1
+    for word in ['paper', 'papir', 'tryk']:
+        if word in context:
+            score -= 1
+    if regex.search(r'\bp\b', context):
+        score -= 1
+    return score
