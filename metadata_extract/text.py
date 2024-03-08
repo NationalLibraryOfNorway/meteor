@@ -169,3 +169,14 @@ def substitute_non_alphanumeric(text: str) -> str:
 
 def has_non_author_keywords(text: str) -> bool:
     return bool(regex.search(photograph_label(), text))
+
+
+def score_isxn_context(context: Optional[str]) -> int:
+    if not context:
+        return 0
+    score = 0
+    e_matches = regex.findall(fr'{__labels()["e_isxn"]}|\be\b', context)
+    score += len(e_matches)
+    p_matches = regex.findall(fr'{__labels()["p_isxn"]}|\bp\b', context)
+    score -= len(p_matches)
+    return score

@@ -89,13 +89,7 @@ class Metadata:
         isxn_values = {}
         for isxn in self.candidates[identifier]:
             if isxn.value not in isxn_values:
-                isxn_values[isxn.value] = 0
-            for word in ['digital', 'pdf', 'elektroni', 'net', 'web']:
-                if isxn.context and word in isxn.context:
-                    isxn_values[isxn.value] += 1
-            for word in ['paper', 'papir', 'tryk']:
-                if isxn.context and word in isxn.context:
-                    isxn_values[isxn.value] -= 1
+                isxn_values[isxn.value] = text.score_isxn_context(isxn.context)
 
         sorted_dict = sorted(isxn_values.items(), key=lambda x: -x[1])
         for k in sorted_dict:
