@@ -168,7 +168,7 @@ jobs:
           kubectl config use-context meteor
           kubectl config view
           kubectl version
-          sed -i "s/<pvc_claim_name>/dimo-fileserver-expandable-pvc/g" k8s/meteor.yml
+          sed -i "s/<pvc_claim_name>/dimo-file-server-expandable-pvc/g" k8s/meteor.yml
           sed -i "s/<version>/${{ steps.set_version.outputs.img_version }}/g" k8s/meteor.yml
           sed -i "s/<host_url>/${{ steps.import-secrets.outputs.K8S_HOST_URL }}/g" k8s/meteor.yml
           kubectl apply -f k8s/meteor.yml
