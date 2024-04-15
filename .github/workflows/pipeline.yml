@@ -122,3 +122,44 @@ jobs:
           sed -i "s/<host_url>/${{ steps.import-secrets.outputs.K8S_HOST_URL }}/g" k8s/stage/meteor.yml
           kubectl apply -f k8s/stage/meteor.yml
           kubectl rollout restart deploy/meteor
+
+  deploy-to-prod:
+    name: Deploy to kubernetes prod environment
+    needs: build-and-publish
+    runs-on: [self-hosted, Linux]
+    if: startsWith(github.event.ref, 'refs/tags/v')
+    environment: prod
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Import secrets
+        id: import-secrets
+        uses: hashicorp/vault-action@v3
+        with:
+          url: ${{ secrets.VAULT_URL }}
+          method: approle
+          roleId: ${{ secrets.VAULT_ROLE_ID }}
+          secretId: ${{ secrets.VAULT_SECRET_ID }}
+          secrets: |
+            kv/team/text/data/harvestk8s-text-prod *
+
+      - name: Setup Kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: 'v1.26.5'
+
+      - name: Deploy to k8s
+        run: |
+          echo "Deploy version ${{ env.APP_VERSION }}" to prod
+          kubectl config set-cluster k8s --server="${{ steps.import-secrets.outputs.K8S_SERVER }}"
+          kubectl config set clusters.k8s.certificate-authority-data ${{ steps.import-secrets.outputs.K8S_NB_NO_CA }}
+          kubectl config set-credentials ${{ steps.import-secrets.outputs.K8S_USER }} --token=${{ steps.import-secrets.outputs.K8S_NB_NO_TOKEN }}
+          kubectl config set-context meteor --cluster=k8s --user=${{ steps.import-secrets.outputs.K8S_USER }} --namespace=tekst-stage
+          kubectl config use-context meteor
+          kubectl config view
+          kubectl version
+          sed -i "s/<version>/${{ env.APP_VERSION }}/g" k8s/prod/meteor.yml
+          sed -i "s/<host_url>/${{ steps.import-secrets.outputs.K8S_HOST_URL }}/g" k8s/prod/meteor.yml
+          kubectl apply -f k8s/prod/meteor.yml
+          kubectl rollout restart deploy/meteor
