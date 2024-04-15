@@ -87,6 +87,7 @@ jobs:
     name: Deploy to kubernetes stage environment
     needs: build-and-publish
     runs-on: [self-hosted, Linux]
+    if: github.ref == 'refs/heads/main'
     environment: stage
     steps:
       - name: Checkout repository
