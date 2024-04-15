@@ -149,17 +149,25 @@ jobs:
         with:
           version: 'v1.26.5'
 
+      - name: Set Version
+        uses: actions/github-script@v7
+        id: set_version
+        with:
+          script: |
+            const no_v = context.ref.replace('refs/tags/v', '')
+            core.setOutput('img_version', no_v)
+
       - name: Deploy to k8s
         run: |
           echo "Deploy version ${{ env.APP_VERSION }}" to prod
           kubectl config set-cluster k8s --server="${{ steps.import-secrets.outputs.K8S_SERVER }}"
           kubectl config set clusters.k8s.certificate-authority-data ${{ steps.import-secrets.outputs.K8S_NB_NO_CA }}
           kubectl config set-credentials ${{ steps.import-secrets.outputs.K8S_USER }} --token=${{ steps.import-secrets.outputs.K8S_NB_NO_TOKEN }}
-          kubectl config set-context meteor --cluster=k8s --user=${{ steps.import-secrets.outputs.K8S_USER }} --namespace=tekst-stage
+          kubectl config set-context meteor --cluster=k8s --user=${{ steps.import-secrets.outputs.K8S_USER }} --namespace=tekst-prod
           kubectl config use-context meteor
           kubectl config view
           kubectl version
-          sed -i "s/<version>/${{ env.APP_VERSION }}/g" k8s/prod/meteor.yml
+          sed -i "s/<version>/${{ steps.set_version.outputs.img_version }}/g" k8s/prod/meteor.yml
           sed -i "s/<host_url>/${{ steps.import-secrets.outputs.K8S_HOST_URL }}/g" k8s/prod/meteor.yml
           kubectl apply -f k8s/prod/meteor.yml
           kubectl rollout restart deploy/meteor
