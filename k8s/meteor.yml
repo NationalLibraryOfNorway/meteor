@@ -15,7 +15,7 @@ spec:
       volumes:
         - name: dimo-file-server-volume
           persistentVolumeClaim:
-            claimName: dimo-fileserver-pvc
+            claimName: <pvc_claim_name>
       containers:
         - name: app
           image: nationallibraryofnorway/meteor:<version>
