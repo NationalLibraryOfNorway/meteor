@@ -86,7 +86,7 @@ jobs:
   deploy-to-stage:
     name: Deploy to kubernetes stage environment
     needs: build-and-publish
-    runs-on: [self-hosted, Linux]
+    runs-on: [self-hosted]
     if: github.ref == 'refs/heads/main'
     environment: stage
     steps:
@@ -128,7 +128,7 @@ jobs:
   deploy-to-prod:
     name: Deploy to kubernetes prod environment
     needs: build-and-publish
-    runs-on: [self-hosted, Linux]
+    runs-on: [self-hosted]
     if: startsWith(github.event.ref, 'refs/tags/v')
     environment: prod
     steps:
