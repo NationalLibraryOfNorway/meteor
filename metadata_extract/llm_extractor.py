@@ -18,7 +18,7 @@ class LLMExtractor:
     INSTRUCTION = "Extract metadata from this document. Return as JSON."
     MAX_TOKENS = 1024
     TEMPERATURE = 0.0
-    TIMEOUT = 30
+    TIMEOUT = 120
 
     def __init__(self, doc: MeteorDocument):
         self._doc = doc
