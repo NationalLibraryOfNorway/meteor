@@ -9,6 +9,7 @@ from .registry import PublisherRegistry
 from .meteor_document import MeteorDocument
 from .metadata import Results
 from .finder import Finder
+from .llm_extractor import LLMExtractor
 
 
 class Meteor:
@@ -43,7 +44,11 @@ class Meteor:
 
     def run(self, file_path: str) -> Results:
         with MeteorDocument(file_path) as doc:
-            finder = Finder(doc, self.registry, self.detect_language)
-            finder.extract_metadata()
-            finder.metadata.choose_best()
-            return finder.metadata.results
+            extractor: Optional[LLMExtractor | Finder] = None
+            if LLMExtractor.is_available():
+                extractor = LLMExtractor(doc)
+            else:
+                extractor = Finder(doc, self.registry, self.detect_language)
+            extractor.extract_metadata()
+            extractor.metadata.choose_best()
+            return extractor.metadata.results
