@@ -69,6 +69,13 @@ class Utils:
         return get_settings().CUSTOM_PATH or "/meteor"
 
     @staticmethod
+    def get_available_backends() -> list[str]:
+        backends = ['Finder']
+        if get_settings().LLM_API_URL:
+            backends.append('LLMExtractor')
+        return backends
+
+    @staticmethod
     def verify_file(file: UploadFile) -> None:
         size_limit = int(get_settings().MAX_FILE_SIZE_MB)
         if not file:
@@ -112,10 +119,11 @@ class Utils:
             self,
             filename: Optional[str],
             filepath: str,
+            backend: str,
             delete_immediately: bool = False
     ) -> Union[Error, Results]:
         try:
-            results = self.meteor.run(filepath)
+            results = self.meteor.run(filepath, backend)
             return results
         except Exception as exc:
             print(traceback.format_exc())

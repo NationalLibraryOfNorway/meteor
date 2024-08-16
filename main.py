@@ -64,7 +64,8 @@ async def get_front_page_html(request: Request) -> Response:
         "index.html",
         {
             "request": request,
-            "root_path": Utils.get_environment_prefix()
+            "root_path": Utils.get_environment_prefix(),
+            "backends": Utils.get_available_backends()
         }
     )
 
@@ -78,7 +79,8 @@ def display_error_message_in_template(request: Request, exc: StarletteHTTPExcept
             "results": {
                 'error': str(exc.detail)
             },
-            "root_path": Utils.get_environment_prefix()
+            "root_path": Utils.get_environment_prefix(),
+            "backends": Utils.get_available_backends()
         },
         status_code=exc.status_code
     )
