@@ -1,18 +1,24 @@
 """The LLM extractor module extracts metadata using an external LLM API service."""
 
+from typing import TypedDict
 import json
-import os
 import requests
 from .candidate import AuthorType, Candidate, Origin
 from .metadata import Metadata
 from .meteor_document import MeteorDocument
 
 
+class LLMConfig(TypedDict):
+    """Configuration for LLM API service"""
+    api_url: str
+    api_key: str
+    model: str
+
+
 class LLMExtractor:
     """A LLMExtractor object loads a MeteorDocument and fills a Metadata object
     by performing a call to an external LLM API service."""
 
-    MODEL_NAME = "xxx"  # doesn't matter if running llama.cpp server
     SYSTEM_PROMPT = "You are a skilled librarian specialized in meticulous " + \
                     "cataloguing of digital documents."
     INSTRUCTION = "Extract metadata from this document. Return as JSON."
@@ -20,13 +26,10 @@ class LLMExtractor:
     TEMPERATURE = 0.0
     TIMEOUT = 120
 
-    def __init__(self, doc: MeteorDocument):
+    def __init__(self, doc: MeteorDocument, llm_config: LLMConfig):
         self._doc = doc
+        self._config = llm_config
         self.metadata = Metadata()
-
-    @classmethod
-    def is_available(cls) -> bool:
-        return cls._api_url() is not None
 
     def extract_metadata(self) -> None:
         doc_json = self._doc.extract_text_as_json()
@@ -36,12 +39,20 @@ class LLMExtractor:
     def _llm_request(self, doc_json: str) -> str:
         message = f"{self.INSTRUCTION}\n\n{doc_json}"
 
+        if self._config['api_url'].endswith("/"):
+            url = self._config['api_url'] + "chat/completions"
+        else:
+            url = self._config['api_url'] + "/chat/completions"
+
         headers = {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json"
         }
 
+        if self._config['api_key']:
+            headers['Authorization'] = f'Bearer {self._config["api_key"]}'
+
         data = {
-            "model": self.MODEL_NAME,
+            "model": self._config['model'],
             "messages": [
                 {"role": "system", "content": self.SYSTEM_PROMPT},
                 {"role": "user", "content": message},
@@ -50,7 +61,7 @@ class LLMExtractor:
             "max_tokens": self.MAX_TOKENS
         }
 
-        api_response = requests.post(str(self._api_url()),
+        api_response = requests.post(url,
                                      headers=headers,
                                      json=data,
                                      timeout=self.TIMEOUT)
@@ -104,7 +115,3 @@ class LLMExtractor:
         # p-issn - Meteor isn't interested in printed ISBNs
 
         # type_coar - not supported by Meteor
-
-    @classmethod
-    def _api_url(cls) -> str | None:
-        return os.environ.get('LLM_API_URL')

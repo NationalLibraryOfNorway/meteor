@@ -47,6 +47,14 @@ class Utils:
             self.meteor.set_language_detection_method(
                 lambda t: gielladetect.detect(t, langs=langs)
             )
+        if get_settings().LLM_API_URL:
+            self.meteor.set_llm_config(
+                llm_config={
+                    'api_url': get_settings().LLM_API_URL,
+                    'api_key': get_settings().LLM_API_KEY,
+                    'model': get_settings().LLM_MODEL
+                }
+            )
 
     @staticmethod
     def get_languages() -> Optional[list[str]]:
