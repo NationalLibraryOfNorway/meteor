@@ -46,7 +46,7 @@ class Meteor:
     def set_llm_config(self, llm_config: LLMConfig) -> None:
         self.llm_config = llm_config
 
-    def run(self, file_path: str, backend: Optional[str]) -> Results:
+    def run(self, file_path: str, backend: Optional[str] = None) -> Results:
         with MeteorDocument(file_path) as doc:
             extractor: Optional[LLMExtractor | Finder] = None
             if backend and backend.lower() == 'llmextractor':
