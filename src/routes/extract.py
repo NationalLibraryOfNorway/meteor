@@ -75,11 +75,13 @@ async def post_pdf_json(
     if file_url != "" and isinstance(file_url, str):
         utils.verify_url(file_url)
         filepath = utils.download_file(file_url)
-        results = utils.process_and_remove(file_url, filepath, backend=backend, delete_immediately=True)
+        results = utils.process_and_remove(
+            file_url, filepath, backend=backend, delete_immediately=True)
     elif file_input is not None and isinstance(file_input, UploadFile):
         utils.verify_file(file_input)
         filepath = utils.save_file(file_input)
-        results = utils.process_and_remove(file_input.filename, filepath, backend=backend, delete_immediately=True)
+        results = utils.process_and_remove(
+            file_input.filename, filepath, backend=backend, delete_immediately=True)
     else:
         raise HTTPException(400)
     return JSONResponse(results)
