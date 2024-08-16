@@ -31,7 +31,7 @@ async def post_pdf_html(
     form = await request.form()
     file_input = form.get('fileInput')
     file_url = form.get('fileUrl')
-    backend = form.get('backend')
+    backend = str(form.get('backend'))
 
     if file_url != "" and isinstance(file_url, str):
         utils.verify_url(file_url)
@@ -70,7 +70,7 @@ async def post_pdf_json(
     form = await request.form()
     file_input = form.get('fileInput')
     file_url = form.get('fileUrl')
-    backend = form.get('backend')
+    backend = str(form.get('backend'))
 
     if file_url != "" and isinstance(file_url, str):
         utils.verify_url(file_url)

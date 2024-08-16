@@ -119,7 +119,7 @@ class Utils:
             self,
             filename: Optional[str],
             filepath: str,
-            backend: str,
+            backend: Optional[str] = None,
             delete_immediately: bool = False
     ) -> Union[Error, Results]:
         try:
