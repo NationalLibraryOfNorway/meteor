@@ -50,7 +50,7 @@ class Meteor:
         with MeteorDocument(file_path) as doc:
             extractor: Optional[LLMExtractor | Finder] = None
             if backend and backend.lower() == 'llmextractor' and self.llm_config:
-                extractor = LLMExtractor(doc, self.llm_config)
+                extractor = LLMExtractor(doc, self.registry, self.llm_config)
             else:
                 extractor = Finder(doc, self.registry, self.detect_language)
             extractor.extract_metadata()

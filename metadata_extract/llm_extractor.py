@@ -1,11 +1,12 @@
 """The LLM extractor module extracts metadata using an external LLM API service."""
 
-from typing import TypedDict
+from typing import TypedDict, Optional
 import json
 import requests
 from .candidate import AuthorType, Candidate, Origin
 from .metadata import Metadata
 from .meteor_document import MeteorDocument
+from .registry import PublisherRegistry
 
 
 class LLMConfig(TypedDict):
@@ -26,8 +27,11 @@ class LLMExtractor:
     TEMPERATURE = 0.0
     TIMEOUT = 120
 
-    def __init__(self, doc: MeteorDocument, llm_config: LLMConfig):
+    def __init__(self, doc: MeteorDocument,
+                 registry: Optional[PublisherRegistry],
+                 llm_config: LLMConfig):
         self._doc = doc
+        self._registry = registry
         self._config = llm_config
         self.metadata = Metadata()
 
@@ -94,8 +98,10 @@ class LLMExtractor:
         # publisher
         if 'publisher' in metadata:
             for publisher in metadata['publisher']:
-                # FIXME should we look up publisher in registry like Finder does?
-                self.metadata.add_candidate('publisher', Candidate(publisher, Origin.LLM))
+                publisher_candidate = Candidate(publisher, Origin.LLM)
+                if self._registry:
+                    publisher_candidate.reg_entries = self._registry.search(publisher)
+                self.metadata.add_candidate('publisher', publisher_candidate)
 
         # doi - not supported by Meteor
 
