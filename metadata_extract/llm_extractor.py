@@ -87,7 +87,11 @@ class LLMExtractor:
         # creator
         if 'creator' in metadata:
             for creator in metadata['creator']:
-                lastname, firstname = creator.split(', ', maxsplit=1)
+                if ', ' in creator:
+                    lastname, firstname = creator.split(', ', maxsplit=1)
+                else:
+                    lastname = creator
+                    firstname = ""
                 author_dict: AuthorType = {"firstname": firstname, "lastname": lastname}
                 self.metadata.add_candidate('author', Candidate(author_dict, Origin.LLM))
 
