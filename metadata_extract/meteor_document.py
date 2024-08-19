@@ -4,10 +4,13 @@ Serves as an interface between the file on disk and the internal object used in 
 """
 
 
+import json
 from pathlib import Path
+import re
 from types import TracebackType
 from typing import Optional, Self, Type
 import fitz
+import regex
 from .page import Page
 from .alto_utils import AltoFile
 
@@ -18,6 +21,13 @@ class MeteorDocument:
     It is responsible for loading the file from disk and offers methods to load its
     content. MeteorDocuments are context managers, so they can be used in `with` statements.
     """
+
+    # text extraction settings for LLM
+    PAGES = [0, 1, 2, 3, 4, 5, 6, 7, -2, -1]  # pages to analyze: first 8 pages + last 2 pages
+    THRESHOLD = 100                       # paragraphs shorter than this will always be kept
+    LONG_PARA_PAGES = [0, 1]         # on first two pages, some long paragraphs are accepted
+    LONG_PARA_MAX = 2                # how many long paragraphs to keep on the first two pages
+    PDF_METADATA_SKIP = {'format', 'creator', 'producer'}  # PDF metadata fields not to include
 
     def __init__(self, file_path: str,
                  start: int = 5,
@@ -92,3 +102,47 @@ class MeteorDocument:
                 raise ValueError('No PDF file to load page from')
             self.page_objects[page_number] = Page(pdf_page=self.pdfdoc.load_page(page_number - 1))
         return self.page_objects[page_number]
+
+    def extract_text_as_json(self) -> str:
+        """Extract text and metadata as a JSON string suitable for a LLM"""
+
+        if not self.pdfdoc:
+            raise ValueError('No PDF document set')
+
+        pdfinfo = {}
+        pages = []
+
+        for key in self.pdfdoc.metadata.keys():
+            if key not in self.PDF_METADATA_SKIP and self.pdfdoc.metadata.get(key):
+                pdfinfo[key] = self.pdfdoc.metadata.get(key)
+
+        for page in self.PAGES:
+            if page > len(self.pdfdoc) - 2:
+                continue
+
+            texts = []
+            text = self.pdfdoc[page].get_text(sort=True)
+            # Use regular expression to split text into paragraphs
+            # Delimiter: newline(s) followed by an upper case character
+            paragraphs = regex.split(r'\n+(?=\p{Lu})', text, flags=re.UNICODE)
+            long_paragraph_count = 0
+
+            for paragraph in paragraphs:
+                paragraph = " ".join(paragraph.strip().split())
+
+                if '.....' in paragraph or '. . . . .' in paragraph:
+                    # looks like a ToC entry, skip it
+                    continue
+                if len(paragraph) < self.THRESHOLD:  # short paragraph, keep it
+                    texts.append(paragraph)
+                elif page in self.LONG_PARA_PAGES and long_paragraph_count < self.LONG_PARA_MAX:
+                    # allow some long paragraphs on the first two pages
+                    long_paragraph_count += 1
+                    texts.append(paragraph)
+                else:  # must be a long paragraph, skip it
+                    pass
+            text = '\n'.join(texts)
+            if text:
+                pages.append({"page": self.pdfdoc[page].number, "text": text})
+
+        return json.dumps({"pdfinfo": pdfinfo, "pages": pages})

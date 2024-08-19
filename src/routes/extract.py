@@ -5,7 +5,7 @@
 
 from typing import Annotated, Optional
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from starlette.datastructures import UploadFile
 from starlette.requests import Request
 from starlette.responses import HTMLResponse, JSONResponse, Response
@@ -31,17 +31,18 @@ async def post_pdf_html(
     form = await request.form()
     file_input = form.get('fileInput')
     file_url = form.get('fileUrl')
+    backend = str(form.get('backend'))
 
     if file_url != "" and isinstance(file_url, str):
         utils.verify_url(file_url)
         filename: Optional[str] = file_url
         filepath = utils.download_file(file_url)
-        results = utils.process_and_remove(filename, filepath)
+        results = utils.process_and_remove(filename, filepath, backend=backend)
     elif file_input is not None and isinstance(file_input, UploadFile):
         utils.verify_file(file_input)
         filename = file_input.filename
         filepath = utils.save_file(file_input)
-        results = utils.process_and_remove(filename, filepath)
+        results = utils.process_and_remove(filename, filepath, backend=backend)
     else:
         raise HTTPException(400)
     return templates.TemplateResponse(
@@ -53,7 +54,8 @@ async def post_pdf_html(
             "filepath": filepath,
             "filename": filename,
             "results": results,
-            "root_path": utils.get_environment_prefix()
+            "root_path": utils.get_environment_prefix(),
+            "backends": utils.get_available_backends()
         }
     )
 
@@ -68,15 +70,18 @@ async def post_pdf_json(
     form = await request.form()
     file_input = form.get('fileInput')
     file_url = form.get('fileUrl')
+    backend = str(form.get('backend'))
 
     if file_url != "" and isinstance(file_url, str):
         utils.verify_url(file_url)
         filepath = utils.download_file(file_url)
-        results = utils.process_and_remove(file_url, filepath, delete_immediately=True)
+        results = utils.process_and_remove(
+            file_url, filepath, backend=backend, delete_immediately=True)
     elif file_input is not None and isinstance(file_input, UploadFile):
         utils.verify_file(file_input)
         filepath = utils.save_file(file_input)
-        results = utils.process_and_remove(file_input.filename, filepath, delete_immediately=True)
+        results = utils.process_and_remove(
+            file_input.filename, filepath, backend=backend, delete_immediately=True)
     else:
         raise HTTPException(400)
     return JSONResponse(results)
@@ -85,13 +90,14 @@ async def post_pdf_json(
 @router.get("/file/{file_name}", response_class=JSONResponse, status_code=200)
 async def get_metadata_from_file_on_disk(
         file_name: str,
-        conf: Annotated[Settings, Depends(get_settings)]
+        conf: Annotated[Settings, Depends(get_settings)],
+        backend: Optional[str] = Query(None)  # Define the optional query parameter
 ) -> JSONResponse:
     """
     Extract metadata from a file on disk and return it as JSON
     """
     try:
-        results = utils.meteor.run(conf.MOUNT_FOLDER + '/' + file_name)
+        results = utils.meteor.run(conf.MOUNT_FOLDER + '/' + file_name, backend=backend)
     except Exception:
         return JSONResponse({"error": f"Error while processing {file_name}"})
     return JSONResponse(results)

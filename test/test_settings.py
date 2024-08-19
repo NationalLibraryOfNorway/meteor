@@ -17,4 +17,7 @@ def test_config():
     assert settings.REGISTRY_PASSWORD == ""
     assert settings.USE_GIELLADETECT is False
     assert settings.GIELLADETECT_LANGS == ""
+    assert settings.LLM_API_URL == ""
+    assert settings.LLM_API_KEY == ""
+    assert settings.LLM_MODEL == ""
     assert settings.CUSTOM_PATH == ""

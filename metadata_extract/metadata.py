@@ -112,6 +112,11 @@ class Metadata:
                       and not text.has_no_letters(c.value)]
         if page_title:
             return page_title[0].to_dict()
+        llm_title = [c for c in self.candidates['title'] if
+                     c.origin == Origin.LLM and isinstance(c.value, str)
+                     and not text.has_no_letters(c.value)]
+        if llm_title:
+            return llm_title[0].to_dict()
         return None
 
     def choose_publishers(self) -> Optional[CandidateType]:

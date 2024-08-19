@@ -9,6 +9,7 @@ from .registry import PublisherRegistry
 from .meteor_document import MeteorDocument
 from .metadata import Results
 from .finder import Finder
+from .llm_extractor import LLMConfig, LLMExtractor
 
 
 class Meteor:
@@ -24,6 +25,7 @@ class Meteor:
         self.registry: Optional[PublisherRegistry] = None
         ResourceLoader.load(languages)
         self.detect_language: Callable[[str], Optional[str]] = Meteor.__default_detect
+        self.llm_config: Optional[LLMConfig] = None
 
     @staticmethod
     def __default_detect(text: str) -> Optional[str]:
@@ -41,9 +43,16 @@ class Meteor:
     def set_language_detection_method(self, detect_language: Callable[[str], str]) -> None:
         self.detect_language = detect_language
 
-    def run(self, file_path: str) -> Results:
+    def set_llm_config(self, llm_config: LLMConfig) -> None:
+        self.llm_config = llm_config
+
+    def run(self, file_path: str, backend: Optional[str] = None) -> Results:
         with MeteorDocument(file_path) as doc:
-            finder = Finder(doc, self.registry, self.detect_language)
-            finder.extract_metadata()
-            finder.metadata.choose_best()
-            return finder.metadata.results
+            extractor: Optional[LLMExtractor | Finder] = None
+            if backend and backend.lower() == 'llmextractor' and self.llm_config:
+                extractor = LLMExtractor(doc, self.registry, self.llm_config)
+            else:
+                extractor = Finder(doc, self.registry, self.detect_language)
+            extractor.extract_metadata()
+            extractor.metadata.choose_best()
+            return extractor.metadata.results

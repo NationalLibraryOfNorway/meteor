@@ -13,6 +13,13 @@
         <br>
         <label for="fileUrl">or copy URL to a report:</label>
         <input type="text" name="fileUrl" id="fileUrl">
+        <br>
+        <label for="backendSelect">Extraction method:</label>
+        <select name="backend" id="backendSelect">
+        {% for backend in backends %}
+          <option value="{{ backend }}">{{ backend }}</option>
+        {% endfor %}
+        </select><br>
         <input type="submit" value="Submit" aria-label="Submit">
       </form>
       <p>or drop a PDF file</p>
