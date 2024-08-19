@@ -89,7 +89,7 @@ class LLMExtractor:
 
         # year
         if 'year' in metadata:
-            self.metadata.add_candidate('year', Candidate(metadata['year'], Origin.LLM))
+            self.metadata.add_candidate('year', Candidate(int(metadata['year']), Origin.LLM))
 
         # publisher
         if 'publisher' in metadata:
