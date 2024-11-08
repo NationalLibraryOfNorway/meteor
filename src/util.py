@@ -99,12 +99,15 @@ class Utils:
         size_limit = int(get_settings().MAX_FILE_SIZE_MB)
         file_id = str(uuid.uuid1()) + '.pdf'
         filepath = os.path.join(get_settings().UPLOAD_FOLDER, file_id)
-        response = requests.get(url, timeout=300)
-        if len(response.content) > size_limit * 1024 * 1024:
-            print("downloaded file is too large")
-            raise HTTPException(status_code=400, detail="File too large")
-        with open(filepath, 'wb') as outfile:
-            outfile.write(response.content)
+        response = requests.get(url, timeout=300, stream=True)
+        downloaded_size = 0
+        if response.ok:
+            with open(filepath, 'wb') as outfile:
+                for chunk in response.iter_content(chunk_size=1024*1024):
+                    downloaded_size += len(chunk)
+                    if downloaded_size > size_limit * 1024 * 1024:
+                        raise HTTPException(status_code=400, detail="File too large")
+                    outfile.write(chunk)
         return filepath
 
     class Error(TypedDict):
