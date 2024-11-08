@@ -83,7 +83,7 @@ class Utils:
                 content_size = response.headers['Content-Length']
                 if int(content_size) > size_limit * 1024 * 1024:
                     raise HTTPException(status_code=400, detail="File too large")
-        except requests.exceptions.RequestException as e:
+        except requests.exceptions.RequestException:
             pass
 
     @staticmethod
