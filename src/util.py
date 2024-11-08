@@ -75,9 +75,16 @@ class Utils:
         size_limit = int(get_settings().MAX_FILE_SIZE_MB)
         if not url:
             raise HTTPException(status_code=400, detail="No URL provided")
-        content_size = requests.get(url, stream=True, timeout=30).headers['Content-length']
-        if int(content_size) > size_limit * 1024 * 1024:
-            raise HTTPException(status_code=400, detail="File too large")
+        # Try to verify the length using a HEAD request.
+        # If it fails for any reason (e.g. no Content-Length header), let it pass.
+        try:
+            response = requests.head(url, allow_redirects=True, timeout=30)
+            if 'Content-Length' in response.headers:
+                content_size = response.headers['Content-Length']
+                if int(content_size) > size_limit * 1024 * 1024:
+                    raise HTTPException(status_code=400, detail="File too large")
+        except requests.exceptions.RequestException as e:
+            pass
 
     @staticmethod
     def save_file(uploaded_file: UploadFile) -> str:
@@ -89,9 +96,13 @@ class Utils:
 
     @staticmethod
     def download_file(url: str) -> str:
+        size_limit = int(get_settings().MAX_FILE_SIZE_MB)
         file_id = str(uuid.uuid1()) + '.pdf'
         filepath = os.path.join(get_settings().UPLOAD_FOLDER, file_id)
         response = requests.get(url, timeout=300)
+        if len(response.content) > size_limit * 1024 * 1024:
+            print("downloaded file is too large")
+            raise HTTPException(status_code=400, detail="File too large")
         with open(filepath, 'wb') as outfile:
             outfile.write(response.content)
         return filepath
