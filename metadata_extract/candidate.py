@@ -15,6 +15,7 @@ class Origin(Enum):
     COPYRIGHT = 5
     RAPPORT_PREFIX = 6
     LANGUAGE_MODEL = 7
+    LLM = 8
 
 
 class OriginType(TypedDict):

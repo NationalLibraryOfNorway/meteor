@@ -25,6 +25,9 @@ class Settings(BaseSettings):
     USE_GIELLADETECT: bool = False
     GIELLADETECT_LANGS: str = ""
     CUSTOM_PATH: str = ""
+    LLM_API_URL: str = ""
+    LLM_API_KEY: str = ""
+    LLM_MODEL: str = ""
 
 
 settings = Settings()
