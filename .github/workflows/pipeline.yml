@@ -37,6 +37,8 @@ jobs:
 
   build-and-publish:
     name: Create and push Docker image
+    outputs:
+      image_version: ${{ steps.meta.outputs.version }}
     needs: lint-and-test
     # if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
@@ -91,7 +93,7 @@ jobs:
     with:
       CLUSTER_NAME: "hstk8s"
       ENVIRONMENT: stage
-      IMAGE_VERSION: ${{ env.APP_VERSION }}
+      IMAGE_VERSION: ${{ needs.build-and-publish.outputs.image_version }}
     secrets:
       VAULT_URL: ${{ secrets.NB_VAULT_URL }}
       VAULT_SECRET_PATH: ${{ secrets.TEKST_VAULT_SECRET_PATH }}
