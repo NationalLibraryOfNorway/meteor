@@ -97,10 +97,10 @@ jobs:
         id: import-secrets
         uses: hashicorp/vault-action@v3
         with:
-          url: ${{ secrets.VAULT_URL }}
+          url: ${{ secrets.NB_VAULT_URL }}
           method: approle
-          roleId: ${{ secrets.VAULT_ROLE_ID }}
-          secretId: ${{ secrets.VAULT_SECRET_ID }}
+          roleId: ${{ secrets.TEKST_VAULT_ROLE_ID }}
+          secretId: ${{ secrets.TEKST_VAULT_SECRET_ID }}
           secrets: |
             /v1/secret/v1/application/k8s/tekst/data/hstk8s-text-stage *
 
@@ -139,10 +139,10 @@ jobs:
         id: import-secrets
         uses: hashicorp/vault-action@v3
         with:
-          url: ${{ secrets.VAULT_URL }}
+          url: ${{ secrets.NB_VAULT_URL }}
           method: approle
-          roleId: ${{ secrets.VAULT_ROLE_ID }}
-          secretId: ${{ secrets.VAULT_SECRET_ID }}
+          roleId: ${{ secrets.TEKST_VAULT_ROLE_ID }}
+          secretId: ${{ secrets.TEKST_VAULT_SECRET_ID }}
           secrets: |
             /v1/secret/v1/application/k8s/tekst/data/hstk8s-text-prod *
 
