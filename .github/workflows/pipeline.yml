@@ -91,7 +91,7 @@ jobs:
     with:
       CLUSTER_NAME: "hstk8s"
       ENVIRONMENT: stage
-      IMAGE_VERSION: env.APP_VERSION
+      IMAGE_VERSION: ${{ env.APP_VERSION }}
     secrets:
       VAULT_URL: ${{ secrets.NB_VAULT_URL }}
       VAULT_SECRET_PATH: ${{ secrets.TEKST_VAULT_SECRET_PATH }}
