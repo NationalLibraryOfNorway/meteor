@@ -47,3 +47,7 @@ class Meteor:
             finder.extract_metadata()
             finder.metadata.choose_best()
             return finder.metadata.results
+
+    def ping_registry(self) -> None:
+        if self.registry:
+            self.registry.ping()

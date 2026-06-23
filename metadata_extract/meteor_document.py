@@ -30,7 +30,7 @@ class MeteorDocument:
             self.pages, self.page_objects = self.__read_alto_pages(path, start, end)
         elif path.is_file():
             self.pdfdoc = fitz.open(file_path)
-            self.pdfinfo = self.pdfdoc.metadata
+            self.pdfinfo = self.pdfdoc.metadata  # pylint: disable=no-member
             self.pages = self.__read_pdf_pages(start, end)
             self.page_objects = {}
         else:

@@ -132,3 +132,6 @@ class Utils:
                 os.remove(filepath)
             else:
                 threading.Timer(5, lambda: os.remove(filepath)).start()
+
+    def ping_registry(self) -> None:
+        self.meteor.ping_registry()

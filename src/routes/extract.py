@@ -10,6 +10,7 @@ from starlette.datastructures import UploadFile
 from starlette.requests import Request
 from starlette.responses import HTMLResponse, JSONResponse, Response
 from starlette.templating import _TemplateResponse, Jinja2Templates
+from mysql.connector.errors import InterfaceError
 
 from src.settings import get_settings, Settings
 from src.util import Utils
@@ -95,3 +96,17 @@ async def get_metadata_from_file_on_disk(
     except Exception:
         return JSONResponse({"error": f"Error while processing {file_name}"})
     return JSONResponse(results)
+
+
+@router.get("/health")
+def health() -> JSONResponse:
+    return JSONResponse(content={"status": "alive"})
+
+
+@router.get("/ready")
+def ready() -> JSONResponse:
+    try:
+        utils.ping_registry()
+        return JSONResponse(content={"status": "ready"})
+    except InterfaceError:
+        return JSONResponse(status_code=500, content={"status": "not ready"})
