@@ -58,19 +58,19 @@ spec:
             - name: dimo-file-server-volume
               mountPath: /dimo-file-server
           imagePullPolicy: Always
-	  livenessProbe:
-	    httpGet:
-	      path: /health
-	      port: 8000
-	    initialDelaySeconds: 5
-	    periodSeconds: 10
-	    failureThreshold: 3
-	  readinessProbe:
-	    httpGet:
-	      path: /ready
-	      port: 8000
-	    initialDelaySeconds: 5
-	    periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
 
 ---
 
