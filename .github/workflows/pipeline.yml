@@ -44,10 +44,10 @@ jobs:
       USE_HARBOR: false
       ENVIRONMENT: stage
     secrets:
-      VAULT_URL: ${{ secrets.VAULT_URL }}
-      VAULT_SECRET_PATH: ${{ secrets.VAULT_SECRET_PATH }}
-      VAULT_ROLE_ID: ${{ secrets.VAULT_ROLE_ID }}
-      VAULT_SECRET_ID: ${{ secrets.VAULT_SECRET_ID }}
+      VAULT_URL: ${{ secrets.NB_VAULT_URL }}
+      VAULT_SECRET_PATH: ${{ secrets.TEKST_VAULT_SECRET_PATH }}
+      VAULT_ROLE_ID: ${{ secrets.TEKST_VAULT_ROLE_ID }}
+      VAULT_SECRET_ID: ${{ secrets.TEKST_VAULT_SECRET_ID }}
 
 
   deploy-to-stage:
