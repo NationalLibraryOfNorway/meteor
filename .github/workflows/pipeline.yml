@@ -86,44 +86,17 @@ jobs:
   deploy-to-stage:
     name: Deploy to kubernetes stage environment
     needs: build-and-publish
-    runs-on: [self-hosted-linux]
     # if: github.ref == 'refs/heads/main'
-    environment: stage
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
-      - name: Import secrets
-        id: import-secrets
-        uses: hashicorp/vault-action@v3
-        with:
-          url: ${{ secrets.NB_VAULT_URL }}
-          method: approle
-          roleId: ${{ secrets.TEKST_VAULT_ROLE_ID }}
-          secretId: ${{ secrets.TEKST_VAULT_SECRET_ID }}
-          secrets: |
-            /v1/secret/v1/application/k8s/tekst/data/hstk8s-text-stage *
-
-      - name: Setup Kubectl
-        uses: azure/setup-kubectl@v4
-        with:
-          version: 'v1.26.5'
-
-      - name: Deploy to k8s
-        run: |
-          echo "Deploy version ${{ env.APP_VERSION }}" to stage
-          kubectl config set-cluster k8s --server="${{ steps.import-secrets.outputs.K8S_SERVER }}"
-          kubectl config set clusters.k8s.certificate-authority-data ${{ steps.import-secrets.outputs.K8S_CA }}
-          kubectl config set-credentials ${{ steps.import-secrets.outputs.K8S_USER }} --token=${{ steps.import-secrets.outputs.K8S_TOKEN }}
-          kubectl config set-context meteor --cluster=k8s --user=${{ steps.import-secrets.outputs.K8S_USER }} --namespace=tekst-stage
-          kubectl config use-context meteor
-          kubectl config view
-          kubectl version
-          sed -i "s/<pvc_claim_name>/dimo-fileserver-pvc/g" k8s/meteor.yml
-          sed -i "s/<version>/${{ env.APP_VERSION }}/g" k8s/meteor.yml
-          sed -i "s/<host_url>/${{ steps.import-secrets.outputs.K8S_HOST_URL }}/g" k8s/meteor.yml
-          kubectl apply -f k8s/meteor.yml
-          kubectl rollout restart deploy/meteor
+    uses: NationalLibraryOfNorway/tekst-workflows/.github/workflows/kubernetes-deploy.yml@main
+    with:
+      CLUSTER_NAME: "hstk8s"
+      ENVIRONMENT: stage
+      IMAGE_VERSION: env.APP_VERSION
+    secrets:
+      VAULT_URL: ${{ secrets.NB_VAULT_URL }}
+      VAULT_SECRET_PATH: ${{ secrets.TEKST_VAULT_SECRET_PATH }}
+      VAULT_ROLE_ID: ${{ secrets.TEKST_VAULT_ROLE_ID }}
+      VAULT_SECRET_ID: ${{ secrets.TEKST_VAULT_SECRET_ID }}
 
   deploy-to-prod:
     name: Deploy to kubernetes prod environment
