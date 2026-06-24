@@ -40,7 +40,7 @@ jobs:
     outputs:
       image_version: ${{ steps.meta.outputs.version }}
     needs: lint-and-test
-    # if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
@@ -103,7 +103,7 @@ jobs:
   deploy-to-prod:
     name: Deploy to kubernetes prod environment
     needs: build-and-publish
-    if: startsWith(github.event.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/v')
     uses: NationalLibraryOfNorway/tekst-workflows/.github/workflows/kubernetes-deploy.yml@main
     with:
       CLUSTER_NAME: "hstk8s"
