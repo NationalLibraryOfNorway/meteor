@@ -11,10 +11,10 @@ jobs:
     name: Run linting, typecheck, and tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.11"
 
@@ -37,25 +37,27 @@ jobs:
 
   build-and-publish:
     name: Create and push Docker image
+    outputs:
+      image_version: ${{ steps.meta.outputs.version }}
     needs: lint-and-test
-    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    # if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Log in to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: nationallibraryofnorway/meteor
           tags: |
@@ -64,7 +66,7 @@ jobs:
             type=ref,event=pr
 
       - name: Build image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           push: true
           context: .
@@ -75,7 +77,7 @@ jobs:
             USE_GIELLA=true
 
       - name: Docker Hub Description
-        uses: peter-evans/dockerhub-description@v4
+        uses: peter-evans/dockerhub-description@v5
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -86,91 +88,29 @@ jobs:
   deploy-to-stage:
     name: Deploy to kubernetes stage environment
     needs: build-and-publish
-    runs-on: [self-hosted]
     if: github.ref == 'refs/heads/main'
-    environment: stage
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Import secrets
-        id: import-secrets
-        uses: hashicorp/vault-action@v3
-        with:
-          url: ${{ secrets.VAULT_URL }}
-          method: approle
-          roleId: ${{ secrets.VAULT_ROLE_ID }}
-          secretId: ${{ secrets.VAULT_SECRET_ID }}
-          secrets: |
-            kv/team/text/data/harvestk8s-text-stage *
-
-      - name: Setup Kubectl
-        uses: azure/setup-kubectl@v4
-        with:
-          version: 'v1.26.5'
-
-      - name: Deploy to k8s
-        run: |
-          echo "Deploy version ${{ env.APP_VERSION }}" to stage
-          kubectl config set-cluster k8s --server="${{ steps.import-secrets.outputs.K8S_STAGE_SERVER }}"
-          kubectl config set clusters.k8s.certificate-authority-data ${{ steps.import-secrets.outputs.K8S_STAGE_NB_NO_CA }}
-          kubectl config set-credentials ${{ steps.import-secrets.outputs.K8S_STAGE_USER }} --token=${{ steps.import-secrets.outputs.K8S_STAGE_NB_NO_TOKEN }}
-          kubectl config set-context meteor --cluster=k8s --user=${{ steps.import-secrets.outputs.K8S_STAGE_USER }} --namespace=tekst-stage
-          kubectl config use-context meteor
-          kubectl config view
-          kubectl version
-          sed -i "s/<pvc_claim_name>/dimo-fileserver-pvc/g" k8s/meteor.yml
-          sed -i "s/<version>/${{ env.APP_VERSION }}/g" k8s/meteor.yml
-          sed -i "s/<host_url>/${{ steps.import-secrets.outputs.K8S_HOST_URL }}/g" k8s/meteor.yml
-          kubectl apply -f k8s/meteor.yml
-          kubectl rollout restart deploy/meteor
+    uses: NationalLibraryOfNorway/tekst-workflows/.github/workflows/kubernetes-deploy.yml@main
+    with:
+      CLUSTER_NAME: "hstk8s"
+      ENVIRONMENT: stage
+      IMAGE_VERSION: ${{ needs.build-and-publish.outputs.image_version }}
+    secrets:
+      VAULT_URL: ${{ secrets.NB_VAULT_URL }}
+      VAULT_SECRET_PATH: ${{ secrets.TEKST_VAULT_SECRET_PATH }}
+      VAULT_ROLE_ID: ${{ secrets.TEKST_VAULT_ROLE_ID }}
+      VAULT_SECRET_ID: ${{ secrets.TEKST_VAULT_SECRET_ID }}
 
   deploy-to-prod:
     name: Deploy to kubernetes prod environment
     needs: build-and-publish
-    runs-on: [self-hosted]
     if: startsWith(github.event.ref, 'refs/tags/v')
-    environment: prod
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Import secrets
-        id: import-secrets
-        uses: hashicorp/vault-action@v3
-        with:
-          url: ${{ secrets.VAULT_URL }}
-          method: approle
-          roleId: ${{ secrets.VAULT_ROLE_ID }}
-          secretId: ${{ secrets.VAULT_SECRET_ID }}
-          secrets: |
-            kv/team/text/data/harvestk8s-text-prod *
-
-      - name: Setup Kubectl
-        uses: azure/setup-kubectl@v4
-        with:
-          version: 'v1.26.5'
-
-      - name: Set Version
-        uses: actions/github-script@v7
-        id: set_version
-        with:
-          script: |
-            const no_v = context.ref.replace('refs/tags/v', '')
-            core.setOutput('img_version', no_v)
-
-      - name: Deploy to k8s
-        run: |
-          echo "Deploy version ${{ env.APP_VERSION }}" to prod
-          kubectl config set-cluster k8s --server="${{ steps.import-secrets.outputs.K8S_SERVER }}"
-          kubectl config set clusters.k8s.certificate-authority-data ${{ steps.import-secrets.outputs.K8S_NB_NO_CA }}
-          kubectl config set-credentials ${{ steps.import-secrets.outputs.K8S_USER }} --token=${{ steps.import-secrets.outputs.K8S_NB_NO_TOKEN }}
-          kubectl config set-context meteor --cluster=k8s --user=${{ steps.import-secrets.outputs.K8S_USER }} --namespace=tekst-prod
-          kubectl config use-context meteor
-          kubectl config view
-          kubectl version
-          sed -i "s/<pvc_claim_name>/dimo-file-server-pvc/g" k8s/meteor.yml
-          sed -i "s/<version>/${{ steps.set_version.outputs.img_version }}/g" k8s/meteor.yml
-          sed -i "s/<host_url>/${{ steps.import-secrets.outputs.K8S_HOST_URL }}/g" k8s/meteor.yml
-          kubectl apply -f k8s/meteor.yml
-          kubectl rollout restart deploy/meteor
+    uses: NationalLibraryOfNorway/tekst-workflows/.github/workflows/kubernetes-deploy.yml@main
+    with:
+      CLUSTER_NAME: "hstk8s"
+      ENVIRONMENT: prod
+      IMAGE_VERSION: ${{ needs.build-and-publish.outputs.image_version }}
+    secrets:
+      VAULT_URL: ${{ secrets.NB_VAULT_URL }}
+      VAULT_SECRET_PATH: ${{ secrets.TEKST_VAULT_SECRET_PATH }}
+      VAULT_ROLE_ID: ${{ secrets.TEKST_VAULT_ROLE_ID }}
+      VAULT_SECRET_ID: ${{ secrets.TEKST_VAULT_SECRET_ID }}

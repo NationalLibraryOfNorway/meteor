@@ -74,3 +74,7 @@ class PublisherRegistry:
                 })
             )
         return results
+
+    def ping(self) -> None:
+        if isinstance(self.connection, MySQLConnection):
+            self.connection.ping(reconnect=True)

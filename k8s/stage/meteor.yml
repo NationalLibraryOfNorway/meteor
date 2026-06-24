@@ -15,7 +15,7 @@ spec:
       volumes:
         - name: dimo-file-server-volume
           persistentVolumeClaim:
-            claimName: <pvc_claim_name>
+            claimName: dimo-fileserver-pvc
       containers:
         - name: app
           image: nationallibraryofnorway/meteor:<version>
@@ -58,6 +58,19 @@ spec:
             - name: dimo-file-server-volume
               mountPath: /dimo-file-server
           imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              path: /meteor/health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /meteor/ready
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 15
 
 ---
 
