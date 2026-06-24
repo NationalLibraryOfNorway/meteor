@@ -60,14 +60,14 @@ spec:
           imagePullPolicy: Always
           livenessProbe:
             httpGet:
-              path: /health
+              path: /meteor/health
               port: 8000
             initialDelaySeconds: 30
             periodSeconds: 20
             failureThreshold: 3
           readinessProbe:
             httpGet:
-              path: /ready
+              path: /meteor/ready
               port: 8000
             initialDelaySeconds: 30
             periodSeconds: 15
