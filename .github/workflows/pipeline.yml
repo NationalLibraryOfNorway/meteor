@@ -88,17 +88,45 @@ jobs:
   deploy-to-stage:
     name: Deploy to kubernetes stage environment
     needs: build-and-publish
-    if: github.ref == 'refs/heads/develop'
-    uses: NationalLibraryOfNorway/tekst-workflows/.github/workflows/kubernetes-deploy.yml@main
-    with:
-      CLUSTER_NAME: "hstk8s"
-      ENVIRONMENT: stage
-      IMAGE_VERSION: ${{ needs.build-and-publish.outputs.image_version }}
-    secrets:
-      VAULT_URL: ${{ secrets.NB_VAULT_URL }}
-      VAULT_SECRET_PATH: ${{ secrets.TEKST_VAULT_SECRET_PATH }}
-      VAULT_ROLE_ID: ${{ secrets.TEKST_VAULT_ROLE_ID }}
-      VAULT_SECRET_ID: ${{ secrets.TEKST_VAULT_SECRET_ID }}
+    runs-on: ubuntu-latest
+    - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Import stage secrets
+        id: import-secrets
+        uses: hashicorp/vault-action@v3
+        with:
+          url: ${{ secrets.NB_VAULT_URL }}
+          method: approle
+          roleId: ${{ secrets.TEKST_VAULT_ROLE_ID }}
+          secretId: ${{ secrets.TEKST_VAULT_SECRET_ID }}
+          secrets: |
+            ${{ secrets.TEKST_VAULT_SECRET_PATH }}/hstk8s-text-stage * ;
+            ${{ secrets.TEKST_VAULT_SECRET_PATH }}/dockerhub *
+
+      - name: Setup Kubectl
+        uses: azure/setup-kubectl@v5
+        with:
+          version: 'v1.37.0'
+
+      - name: Replace values in k8s files (k8s ingress)
+       shell: bash
+        run: |
+          sed -i "s|<version>|${{ needs.build-and-publish.outputs.image_version }}|g" k8s/stage/meteor.yml
+          sed -i "s|<host_url>|${{ steps.import-secrets.outputs.K8S_HOST_URL }}|g" k8s/stage/meteor.yml
+
+      - name: Deploy to stage cluster
+        run: |
+          echo "Deploying to stage"
+          kubectl config set-cluster somecl --server=${{ steps.import-secrets.outputs.K8S_SERVER }}
+          kubectl config set clusters.somecl.certificate-authority-data ${{ steps.import-secrets.outputs.K8S_CA }}
+          kubectl config set-credentials ${{ steps.import-secrets.outputs.K8S_USER }} --token=${{ steps.import-secrets.outputs.K8S_TOKEN }}
+          kubectl config set-context tekst --cluster=somecl --user=${{ steps.import-secrets.outputs.K8S_USER }} --namespace=tekst-stage
+          kubectl config use-context tekst
+          kubectl config view
+          kubectl version
+          kubectl apply -f k8s/stage/meteor.yml
+          kubectl rollout restart deploy/meteor
 
   deploy-to-prod:
     name: Deploy to kubernetes prod environment
