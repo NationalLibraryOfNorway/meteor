@@ -89,7 +89,8 @@ jobs:
     name: Deploy to kubernetes stage environment
     needs: build-and-publish
     runs-on: ubuntu-latest
-    - name: Checkout repository
+    steps:
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Import stage secrets
@@ -110,7 +111,7 @@ jobs:
           version: 'v1.37.0'
 
       - name: Replace values in k8s files (k8s ingress)
-       shell: bash
+        shell: bash
         run: |
           sed -i "s|<version>|${{ needs.build-and-publish.outputs.image_version }}|g" k8s/stage/meteor.yml
           sed -i "s|<host_url>|${{ steps.import-secrets.outputs.K8S_HOST_URL }}|g" k8s/stage/meteor.yml
